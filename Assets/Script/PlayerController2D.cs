@@ -18,6 +18,10 @@ public class PlayerController2D : MonoBehaviour
     private bool isGrounded;
     private bool facingRight = true;
 
+    [Header("Attack Settings")]
+    public float attackCooldown = 0.5f;   // เวลาระหว่างการโจมตี
+    private float lastAttackTime = -999f; // เวลาโจมตีล่าสุด
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -28,7 +32,7 @@ public class PlayerController2D : MonoBehaviour
     void Update()
     {
         // --- Movement ---
-        float move = Input.GetAxisRaw("Horizontal"); // A,D หรือ ลูกศรซ้ายขวา
+        float move = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
 
         // --- Flip ---
@@ -44,17 +48,23 @@ public class PlayerController2D : MonoBehaviour
             anim.SetTrigger("Jump");
         }
 
+        // --- Attack ---
+        if (Input.GetMouseButtonDown(0) && Time.time - lastAttackTime >= attackCooldown)
+        {
+            Attack();
+        }
+
         // --- Animation ---
         anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         anim.SetBool("isGrounded", isGrounded);
-        Debug.Log("isGrounded: " + isGrounded);
     }
 
     void FixedUpdate()
     {
         // --- Ground Check ---
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-        // ยิง Ray ลงจากเท้า 3 จุด (ซ้าย กลาง ขวา)
+
+        // ยิง Ray ตรวจพื้น (ซ้าย กลาง ขวา)
         float rayLength = 0.3f;
         Vector2 leftFoot = groundCheck.position + new Vector3(-0.15f, 0f);
         Vector2 midFoot = groundCheck.position;
@@ -69,6 +79,14 @@ public class PlayerController2D : MonoBehaviour
         Debug.DrawRay(leftFoot, Vector2.down * rayLength, Color.red);
         Debug.DrawRay(midFoot, Vector2.down * rayLength, Color.green);
         Debug.DrawRay(rightFoot, Vector2.down * rayLength, Color.blue);
+    }
+
+    void Attack()
+    {
+        lastAttackTime = Time.time;
+        anim.SetTrigger("Attack");
+        Debug.Log("Player Attacked!");
+        // 👉 ที่นี่สามารถเพิ่มระบบตรวจสอบศัตรูหรือ Damage ได้ภายหลัง
     }
 
     void Flip()
