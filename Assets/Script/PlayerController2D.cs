@@ -8,7 +8,7 @@ public class PlayerController2D : MonoBehaviour
     public float jumpForce = 8f;
 
     public Transform groundCheck;
-    public float groundCheckRadius = 0.1f;
+    public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
 
     private Rigidbody2D rb;
