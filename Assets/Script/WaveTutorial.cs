@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class WaveTutorial : MonoBehaviour
 {
-    //public Player player;
-    //public Enemy dummyEnemy;
-    //public Item tutorialItem;
+    public Player player;
+    public Enemy dummyEnemy;
+    public Item tutorialItem;
     public Text tutorialText;
 
     private int step = 0;
@@ -42,22 +42,22 @@ public class WaveTutorial : MonoBehaviour
                 break;
 
             case 2: // Attack dummy
-                //if (dummyEnemy == null) // หมายถึง dummy ถูกทำลาย
+                if (dummyEnemy == null) // หมายถึง dummy ถูกทำลาย
                 {
                     NextStep();
                 }
                 break;
 
             case 3: // Collect item
-                //if (tutorialItem == null) // หมายถึงเก็บ item แล้ว
+                if (tutorialItem == null) // หมายถึงเก็บ item แล้ว
                 {
                     NextStep();
                 }
                 break;
 
             case 4: // Defeat enemy
-                //Enemy realEnemy = FindObjectOfType<Enemy>();
-                //if (realEnemy == null)
+                Enemy realEnemy = FindObjectOfType<Enemy>();
+                if (realEnemy == null)
                 {
                     CompleteTutorial();
                 }
