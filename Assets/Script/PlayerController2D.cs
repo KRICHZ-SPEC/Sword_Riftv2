@@ -54,6 +54,21 @@ public class PlayerController2D : MonoBehaviour
     {
         // --- Ground Check ---
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        // ยิง Ray ลงจากเท้า 3 จุด (ซ้าย กลาง ขวา)
+        float rayLength = 0.3f;
+        Vector2 leftFoot = groundCheck.position + new Vector3(-0.15f, 0f);
+        Vector2 midFoot = groundCheck.position;
+        Vector2 rightFoot = groundCheck.position + new Vector3(0.15f, 0f);
+
+        bool hitLeft = Physics2D.Raycast(leftFoot, Vector2.down, rayLength, groundLayer);
+        bool hitMid = Physics2D.Raycast(midFoot, Vector2.down, rayLength, groundLayer);
+        bool hitRight = Physics2D.Raycast(rightFoot, Vector2.down, rayLength, groundLayer);
+
+        isGrounded = hitLeft || hitMid || hitRight;
+
+        Debug.DrawRay(leftFoot, Vector2.down * rayLength, Color.red);
+        Debug.DrawRay(midFoot, Vector2.down * rayLength, Color.green);
+        Debug.DrawRay(rightFoot, Vector2.down * rayLength, Color.blue);
     }
 
     void Flip()
