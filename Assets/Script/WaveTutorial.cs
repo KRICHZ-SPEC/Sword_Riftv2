@@ -91,7 +91,7 @@ public class WaveTutorial : MonoBehaviour
                 tutorialUI.ShowMessage("Defeat the real enemy that appears!");
                 break;
             default:
-                tutorialUI.ShowMessage("🎉 Tutorial Complete! 🎉");
+                tutorialUI.ShowMessage(" Tutorial Complete! ");
                 break;
         }
     }
@@ -99,7 +99,7 @@ public class WaveTutorial : MonoBehaviour
     void CompleteTutorial()
     {
         isCompleted = true;
-        tutorialText.text = "🎉 Tutorial Complete! 🎉";
-        // สามารถเรียก WaveManager.NextWave() ได้หลังจากนี้
+        tutorialUI.ShowMessage(" Tutorial Complete! ");
+        // WaveManager.NextWave() สามารถเรียกต่อได้ตรงนี้
     }
 }

@@ -7,12 +7,12 @@ public class Boss : Enemy
     public ActiveSkill[] specialSkills;
     public float enragedThreshold = 0.3f; // % hp
 
-    protected override void Update() 
-    {
-        base.Update();
-        CheckPhase();
-        UseSkills();
-    }
+    //protected override void Update() 
+    //{
+        //base.Update();
+        //CheckPhase();
+        //UseSkills();
+    //}
 
     void CheckPhase() {
         float hpPercent = hp / 100f; // assume max 100 for simplicity
