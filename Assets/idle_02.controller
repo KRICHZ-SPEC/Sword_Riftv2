@@ -354,7 +354,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: idle_01
+  m_Name: idle_02
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: isHurt

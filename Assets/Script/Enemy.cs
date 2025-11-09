@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,13 +25,19 @@ public class Enemy : MonoBehaviour
     protected Transform playerTransform;
     protected Rigidbody2D rb;
     protected Animator anim;
+    protected SpriteRenderer sr;
     protected float lastAttackTime;
     protected bool isDead = false;
+
+    [Header("Hit Flash")]
+    public Color hitColor = Color.red;
+    public float flashDuration = 0.15f; // ระยะเวลาที่จะเป็นสีแดง
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
 
         rb.gravityScale = 0;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -43,7 +50,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return; // หยุดทำงานถ้าตายแล้ว
+        if (isDead) return;
 
         if (playerTransform != null)
             PatrolOrChase();
@@ -57,27 +64,42 @@ public class Enemy : MonoBehaviour
         {
             if (dist > attackRange)
             {
+                anim.SetBool("isWalking", true); // 🎬 เดิน
                 Vector2 dir = (playerTransform.position - transform.position).normalized;
                 Vector2 newPos = rb.position + dir * speed * Time.deltaTime;
                 rb.MovePosition(newPos);
             }
             else
             {
+                anim.SetBool("isWalking", false);
                 TryAttack();
             }
+        }
+        else
+        {
+            anim.SetBool("isWalking", false); // ไม่มีผู้เล่นในระยะ
         }
     }
 
     protected virtual void TryAttack()
     {
+        
         if (Time.time - lastAttackTime >= attackCooldown)
         {
+            anim.SetBool("isAttacking", true);
             var player = playerTransform.GetComponent<Player>();
             if (player != null)
                 Attack(player);
 
             lastAttackTime = Time.time;
+
+            // ปิดสถานะโจมตีหลัง delay สั้น ๆ (ให้อนิเมชันจบ)
+            Invoke(nameof(EndAttack), 0.5f);
         }
+    }
+    void EndAttack()
+    {
+        anim.SetBool("isAttacking", false);
     }
 
     public virtual void Attack(Player player)
@@ -90,7 +112,9 @@ public class Enemy : MonoBehaviour
         if (isDead) return;
 
         hp -= amount;
-        anim.SetTrigger("isHurt"); // เล่นอนิเมชัน hurt
+        anim.SetTrigger("isHurt");
+
+        StartCoroutine(HitFlash()); // 👈 เพิ่มฟังก์ชันนี้ให้มอนแดง
 
         if (hp <= 0)
         {
@@ -98,21 +122,25 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    IEnumerator HitFlash()
+    {
+        sr.color = hitColor; // เปลี่ยนเป็นสีแดง
+        yield return new WaitForSeconds(flashDuration);
+        sr.color = Color.white; // กลับเป็นสีเดิม
+    }
+
     public virtual void Die()
     {
         if (isDead) return;
         isDead = true;
 
-        anim.SetBool("isDead", true); // เล่นอนิเมชันตาย
-
+        anim.SetBool("isDead", true);
         rb.velocity = Vector2.zero;
         rb.isKinematic = true;
         GetComponent<Collider2D>().enabled = false;
 
         DropItem();
-
-        // รอให้อนิเมชันตายเล่นจบก่อน Destroy
-        Destroy(gameObject, 1.5f); // ปรับเวลาให้พอดีกับความยาวอนิเมชัน
+        Destroy(gameObject, 1.5f);
     }
 
     protected virtual void DropItem()
