@@ -7,7 +7,7 @@ public class WaveTutorial : MonoBehaviour
     public Enemy dummyEnemy;
     public Item tutorialItem;
     public Text tutorialText;
-
+    public TutorialUI tutorialUI;
     private int step = 0;
     private bool isCompleted = false;
 
@@ -82,7 +82,7 @@ public class WaveTutorial : MonoBehaviour
                 tutorialText.text = "กด SPACE เพื่อกระโดด";
                 break;
             case 2:
-                tutorialText.text = "กด J เพื่อโจมตีหุ่นฝึก";
+                tutorialText.text = "กด คลิกซ้าย เพื่อโจมตีหุ่นฝึก";
                 break;
             case 3:
                 tutorialText.text = "เดินไปเก็บไอเท็มบนพื้น";

@@ -49,7 +49,7 @@ public class PlayerController2D : MonoBehaviour
         }
 
         // --- Attack ---
-        if (Input.GetMouseButtonDown(0) && Time.time - lastAttackTime >= attackCooldown)
+        if (Input.GetKeyDown(KeyCode.J) && Time.time - lastAttackTime >= attackCooldown)
         {
             Attack();
         }
