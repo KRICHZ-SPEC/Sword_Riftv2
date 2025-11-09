@@ -6,13 +6,13 @@ using TMPro;
 public class TutorialUI : MonoBehaviour
 {
     [Header("UI Components")]
-    public Text uiText;                     // สำหรับ Unity UI ปกติ
+    public Text uiText;                     // สำหรับ UI Text ปกติ
     public TextMeshProUGUI tmpText;         // สำหรับ TextMeshPro
     public CanvasGroup canvasGroup;         // ใช้ควบคุมความโปร่งใสของข้อความ
 
     [Header("Settings")]
-    public float fadeDuration = 0.5f;       // เวลาที่ใช้ในการ fade in/out
-    public float defaultDisplayTime = 3f;   // ระยะเวลาที่ข้อความค้างอยู่
+    public float fadeDuration = 0.5f;       // ระยะเวลาการเฟดเข้า/ออก
+    public float defaultDisplayTime = 3f;   // เวลาที่ข้อความค้างอยู่
 
     private Coroutine currentRoutine;
 
@@ -79,7 +79,7 @@ public class TutorialUI : MonoBehaviour
     }
 
     /// <summary>
-    /// ใช้แสดงข้อความทันที (ไม่ fade)
+    /// ใช้แสดงข้อความทันที (ไม่เฟด)
     /// </summary>
     public void SetInstant(string message)
     {

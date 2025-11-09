@@ -76,22 +76,22 @@ public class WaveTutorial : MonoBehaviour
         switch (step)
         {
             case 0:
-                tutorialText.text = "ใช้ปุ่ม A / D เพื่อเคลื่อนไหว";
+                tutorialUI.ShowMessage("Use A / D to move");
                 break;
             case 1:
-                tutorialText.text = "กด SPACE เพื่อกระโดด";
+                tutorialUI.ShowMessage("Press SPACE to jump");
                 break;
             case 2:
-                tutorialText.text = "กด คลิกซ้าย เพื่อโจมตีหุ่นฝึก";
+                tutorialUI.ShowMessage("Press J to attack the training dummy");
                 break;
             case 3:
-                tutorialText.text = "เดินไปเก็บไอเท็มบนพื้น";
+                tutorialUI.ShowMessage("Walk to pick up the item on the ground");
                 break;
             case 4:
-                tutorialText.text = "กำจัดศัตรูตัวจริงที่โผล่มา!";
+                tutorialUI.ShowMessage("Defeat the real enemy that appears!");
                 break;
             default:
-                tutorialText.text = "";
+                tutorialUI.ShowMessage("🎉 Tutorial Complete! 🎉");
                 break;
         }
     }
