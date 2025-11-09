@@ -160,4 +160,15 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            PlayerController2D player = other.GetComponent<PlayerController2D>();
+            if (player != null)
+            {
+                player.TakeDamage(30f); // ทดสอบความเสียหาย
+            }
+        }
+    }
 }

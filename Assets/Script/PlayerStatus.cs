@@ -9,6 +9,7 @@ public class PlayerStatus
     public float mp;
     public float exp;
     public int level;
+    public float attack = 10f;
 
     // ช่วยเก็บค่าตั้งต้น (ไม่อยู่ในสเปคแต่จำเป็น)
     public float maxHp;
