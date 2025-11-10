@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public float hp = 50f;
     public float damage = 10f;
     public float speed = 2f;
+    public float maxHp = 50f;
 
     [Header("Combat Settings")]
     public float detectRadius = 6f;
@@ -27,6 +28,8 @@ public class Enemy : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
     protected float lastAttackTime;
+    //[Header("Health Bar")]
+    //public EnemyHealthBar healthBar;
     protected bool isDead = false;
 
     [Header("Hit Flash")]
@@ -106,19 +109,24 @@ public class Enemy : MonoBehaviour
         player.TakeDamage(damage);
     }
 
-    public virtual void TakeDamage(float amount)
+    public void TakeDamage(float amount)
     {
         if (isDead) return;
 
         hp -= amount;
-        anim.SetTrigger("isHurt");
+        if (hp < 0) hp = 0;
 
+        anim.SetTrigger("isHurt");
         StartCoroutine(HitFlash());
 
+        // ✅ อัปเดต HealthBar
+        //if (healthBar != null)
+           // healthBar.UpdateBar();
+        //else
+            //Debug.LogWarning("HealthBar not assigned!");
+
         if (hp <= 0)
-        {
             Die();
-        }
     }
 
     IEnumerator HitFlash()
