@@ -17915,7 +17915,7 @@ MonoBehaviour:
   itemName: potion
   type: 0
   value: 100
-  rarity: -100
+  rarity: 0
 --- !u!61 &2038280637
 BoxCollider2D:
   m_ObjectHideFlags: 0
