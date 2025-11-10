@@ -37,7 +37,7 @@ public class Item : MonoBehaviour
         switch (type) 
         {
             case ItemType.HP:
-                player.status.Heal(value);
+                player.AddHp(value); // เรียก method AddHp ของ Player
                 break;
             case ItemType.MP:
                 player.status.mp += value;

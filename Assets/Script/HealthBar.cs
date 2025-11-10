@@ -42,6 +42,7 @@ public class HealthBar : MonoBehaviour
     {
         float hp = _player.status.hp;
         float maxHp = _player.status.maxHp;
+
         float targetWidth = hp * _maxRightMask / maxHp;
         float newRightMask = _maxRightMask + _initialRightMask - targetWidth;
 
@@ -49,6 +50,6 @@ public class HealthBar : MonoBehaviour
         padding.z = newRightMask;
         _mask.padding = padding;
 
-        _hpIndicator.SetText($"{hp}/{maxHp}");
+        _hpIndicator.SetText($"{Mathf.CeilToInt(hp)}/{Mathf.CeilToInt(maxHp)}");
     }
 }

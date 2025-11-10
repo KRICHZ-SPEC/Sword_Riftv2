@@ -128,4 +128,14 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public void AddHp(float amount)
+    {
+        if (isDead) return;
+
+        status.Heal(amount); // เรียก method Heal() ของ PlayerStatus
+
+        // อัปเดต HealthBar หลังเพิ่ม HP
+        if (healthBar != null)
+            healthBar.UpdateBar();
+    }
 }
