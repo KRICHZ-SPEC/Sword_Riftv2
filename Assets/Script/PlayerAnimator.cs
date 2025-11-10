@@ -9,7 +9,6 @@ public class PlayerAnimator : MonoBehaviour
     void Awake()
     {
         anim = GetComponent<Animator>();
-        // สมมติว่า PlayerStatus ถูกประกาศใน PlayerController หรือแนบไว้ใน GameObject เดียวกัน
         status = GetComponent<PlayerController2D>()?.status;
     }
 

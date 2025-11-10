@@ -5,12 +5,12 @@ using UnityEngine.UI;
 public class EnemyHealthBar : MonoBehaviour
 {
     [Header("Link Enemy")]
-    public Enemy enemy;                 // ลิงก์ Enemy
+    public Enemy enemy;                 
     [Header("UI Elements")]
-    public RectTransform barRect;       // แถบสีแดง/Green
+    public RectTransform barRect;       
     public RectMask2D mask;
     public TMP_Text hpText;
-    public Vector3 offset = new Vector3(0, 1.5f, 0); // ระยะเหนือหัว
+    public Vector3 offset = new Vector3(0, 1.5f, 0);
 
     private float maxRightMask;
     private float initialRightMask;
@@ -30,11 +30,7 @@ public class EnemyHealthBar : MonoBehaviour
     private void LateUpdate()
     {
         if (enemy == null) return;
-
-        // ทำให้ HealthBar อยู่เหนือหัว Enemy
         transform.position = enemy.transform.position + offset;
-
-        // หมุนหน้าเข้ากล้อง (optional)
         transform.rotation = Quaternion.LookRotation(transform.position - mainCamera.transform.position);
     }
 

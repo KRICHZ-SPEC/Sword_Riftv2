@@ -28,7 +28,6 @@ public class WaveManager : MonoBehaviour
     IEnumerator RunWave(Wave wave) 
     {
         yield return StartCoroutine(wave.SpawnEnemies(enemyParent));
-        // wait until all enemies dead
         while (enemyParent.childCount > 0) 
         {
             yield return null;
@@ -38,6 +37,5 @@ public class WaveManager : MonoBehaviour
     void OnAllWavesCleared() 
     {
         Debug.Log("All waves cleared!");
-        // trigger next scene or boss etc.
     }
 }

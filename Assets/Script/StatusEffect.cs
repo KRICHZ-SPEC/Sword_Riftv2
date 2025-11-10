@@ -26,11 +26,9 @@ public class StatusEffect
     public bool IsExpired() {
         return _timeLeft <= 0f;
     }
-
-    // Apply immediate or per-tick effect - example: return value modification
+    
     public void ApplyTo(PlayerStatus target) 
     {
-        // Example: if Buff heal over time or poison reduce hp
         if (type == StatusType.Regen) 
         {
             target.Heal(effectValue * Time.deltaTime);

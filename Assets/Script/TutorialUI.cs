@@ -6,19 +6,18 @@ using TMPro;
 public class TutorialUI : MonoBehaviour
 {
     [Header("UI Components")]
-    public Text uiText;                     // สำหรับ UI Text ปกติ
-    public TextMeshProUGUI tmpText;         // สำหรับ TextMeshPro
-    public CanvasGroup canvasGroup;         // ใช้ควบคุมความโปร่งใสของข้อความ
+    public Text uiText;                     
+    public TextMeshProUGUI tmpText;         
+    public CanvasGroup canvasGroup;        
 
     [Header("Settings")]
-    public float fadeDuration = 0.5f;       // ระยะเวลาการเฟดเข้า/ออก
-    public float defaultDisplayTime = 3f;   // เวลาที่ข้อความค้างอยู่
+    public float fadeDuration = 0.5f;      
+    public float defaultDisplayTime = 3f;  
 
     private Coroutine currentRoutine;
 
     void Awake()
     {
-        // Auto setup
         if (canvasGroup == null)
             canvasGroup = GetComponent<CanvasGroup>();
 
@@ -26,14 +25,10 @@ public class TutorialUI : MonoBehaviour
             canvasGroup.alpha = 0f;
     }
 
-    /// <summary>
-    /// แสดงข้อความพร้อม fade in/out อัตโนมัติ
-    /// </summary>
     public void ShowMessage(string message, float duration = -1f)
     {
         if (duration <= 0) duration = defaultDisplayTime;
-
-        // ถ้ามีข้อความก่อนหน้าอยู่ ให้หยุดก่อน
+        
         if (currentRoutine != null)
             StopCoroutine(currentRoutine);
 
@@ -43,14 +38,11 @@ public class TutorialUI : MonoBehaviour
     IEnumerator ShowMessageRoutine(string message, float duration)
     {
         SetText(message);
-
-        // Fade In
+        
         yield return StartCoroutine(FadeCanvas(0, 1, fadeDuration));
-
-        // Wait
+        
         yield return new WaitForSeconds(duration);
-
-        // Fade Out
+        
         yield return StartCoroutine(FadeCanvas(1, 0, fadeDuration));
     }
 
@@ -78,9 +70,6 @@ public class TutorialUI : MonoBehaviour
             tmpText.text = message;
     }
 
-    /// <summary>
-    /// ใช้แสดงข้อความทันที (ไม่เฟด)
-    /// </summary>
     public void SetInstant(string message)
     {
         StopAllCoroutines();
@@ -89,9 +78,6 @@ public class TutorialUI : MonoBehaviour
             canvasGroup.alpha = 1f;
     }
 
-    /// <summary>
-    /// ซ่อนข้อความทันที
-    /// </summary>
     public void HideInstant()
     {
         StopAllCoroutines();

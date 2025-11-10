@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) 
     {
-        if (other.gameObject.tag == ownerTag) return; // don't hit owner
+        if (other.gameObject.tag == ownerTag) return;
         var enemy = other.GetComponent<Enemy>();
         if (enemy != null) 
         {

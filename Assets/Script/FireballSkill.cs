@@ -19,7 +19,7 @@ public class FireballSkill : ActiveSkill
         var proj = go.GetComponent<Projectile>();
         if (proj != null) 
         {
-            proj.Initialize(damage, speed, player.gameObject.tag); // tag for friend/foe
+            proj.Initialize(damage, speed, player.gameObject.tag);
         }
     }
 }

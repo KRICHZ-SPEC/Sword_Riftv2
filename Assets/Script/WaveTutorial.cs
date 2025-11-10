@@ -27,35 +27,35 @@ public class WaveTutorial : MonoBehaviour
     {
         switch (step)
         {
-            case 0: // Move
+            case 0: 
                 if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0)
                 {
                     NextStep();
                 }
                 break;
 
-            case 1: // Jump
+            case 1:
                 if (Input.GetButtonDown("Jump"))
                 {
                     NextStep();
                 }
                 break;
 
-            case 2: // Attack dummy
-                if (dummyEnemy == null) // หมายถึง dummy ถูกทำลาย
+            case 2: 
+                if (dummyEnemy == null) 
                 {
                     NextStep();
                 }
                 break;
 
-            case 3: // Collect item
-                if (tutorialItem == null) // หมายถึงเก็บ item แล้ว
+            case 3: 
+                if (tutorialItem == null) 
                 {
                     NextStep();
                 }
                 break;
 
-            case 4: // Defeat enemy
+            case 4: 
                 Enemy realEnemy = FindObjectOfType<Enemy>();
                 if (realEnemy == null)
                 {
@@ -100,6 +100,5 @@ public class WaveTutorial : MonoBehaviour
     {
         isCompleted = true;
         tutorialUI.ShowMessage(" Tutorial Complete! ");
-        // WaveManager.NextWave() สามารถเรียกต่อได้ตรงนี้
     }
 }

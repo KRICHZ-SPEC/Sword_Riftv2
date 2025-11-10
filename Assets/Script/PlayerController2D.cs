@@ -29,8 +29,7 @@ public class PlayerController2D : MonoBehaviour
 
     [Header("Status")]
     public PlayerStatus status = new PlayerStatus();
-
-    // Coroutine reference
+    
     private Coroutine flashCoroutine;
 
     void Start()
@@ -93,8 +92,7 @@ public class PlayerController2D : MonoBehaviour
         lastAttackTime = Time.time;
         anim.SetTrigger("Attack");
         Debug.Log("Player Attacked!");
-
-        // ✅ ตรวจศัตรูในระยะโจมตี (เช่น 0.8 หน่วย)
+        
         float attackRadius = 0.8f;
         LayerMask enemyLayer = LayerMask.GetMask("Enemy");
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);
@@ -104,7 +102,7 @@ public class PlayerController2D : MonoBehaviour
             Enemy e = enemy.GetComponent<Enemy>();
             if (e != null)
             {
-                e.TakeDamage(status.attack); // ใช้ค่าดาเมจของผู้เล่น
+                e.TakeDamage(status.attack);
                 Debug.Log("Hit Enemy: " + e.name);
             }
         }
@@ -117,11 +115,9 @@ public class PlayerController2D : MonoBehaviour
         s.x *= -1;
         transform.localScale = s;
     }
-
-    // ---------------- Damage & Flash ----------------
+    
     private IEnumerator FlashRedMultiple(int times, float interval)
     {
-        // ป้องกัน sr == null
         if (sr == null) yield break;
 
         for (int i = 0; i < times; i++)
@@ -143,8 +139,7 @@ public class PlayerController2D : MonoBehaviour
         {
             anim.SetTrigger("Hurt");
             Debug.Log($"Player Hurt! HP: {status.hp}");
-
-            // หยุด coroutine เก่าแล้วเริ่มใหม่
+            
             if (flashCoroutine != null)
             {
                 StopCoroutine(flashCoroutine);
@@ -171,5 +166,4 @@ public class PlayerController2D : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, 0.8f);
     }
-    // ------------------------------------------------
 }

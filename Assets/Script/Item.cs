@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
     public string itemName;
     public ItemType type;
     public float value;
-    public int rarity; // 0 common, 1 rare etc.
+    public int rarity;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -37,7 +37,7 @@ public class Item : MonoBehaviour
         switch (type) 
         {
             case ItemType.HP:
-                player.AddHp(value); // เรียก method AddHp ของ Player
+                player.AddHp(value);
                 break;
             case ItemType.MP:
                 player.status.mp += value;
@@ -55,7 +55,6 @@ public class Item : MonoBehaviour
                 player.ApplyStatus(se);
                 break;
             case ItemType.Key:
-                // unlock something
                 break;
         }
         Destroy(gameObject);
@@ -70,7 +69,6 @@ public class Item : MonoBehaviour
         } 
         else 
         {
-            // add to inventory later
             Debug.Log($"{itemName} added to inventory.");
         }
         Destroy(gameObject);

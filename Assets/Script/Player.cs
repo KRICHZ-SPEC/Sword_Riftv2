@@ -26,21 +26,20 @@ public class Player : MonoBehaviour
     {
         if (status.maxHp <= 0) status.maxHp = 100f;
         status.hp = status.maxHp;
-
-        // อัปเดต HealthBar ตอนเริ่ม
+        
         if (healthBar != null) healthBar.UpdateBar();
     }
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();     // ✅
-        sr = GetComponent<SpriteRenderer>(); // ✅
+        anim = GetComponent<Animator>();     
+        sr = GetComponent<SpriteRenderer>();
         status = new PlayerStatus(100, 50);
     }
 
     void Update()
     {
-        if (isDead) return; // ❗ถ้าตายแล้วไม่ต้องขยับ
+        if (isDead) return;
         HandleMovementInput();
         UpdateStatusEffects();
     }
@@ -50,8 +49,7 @@ public class Player : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         Vector2 move = new Vector2(h * moveSpeed, rb.velocity.y);
         rb.velocity = move;
-
-        // ✅ อัปเดต Animator
+        
         if (anim != null)
             anim.SetFloat("Speed", Mathf.Abs(h));
     }
@@ -64,7 +62,7 @@ public class Player : MonoBehaviour
     public void Attack()
     {
         Debug.Log("Player attack");
-        anim.SetTrigger("Attack"); // ✅ trigger โจมตี
+        anim.SetTrigger("Attack");
     }
 
     public void TakeDamage(float amount)
@@ -97,7 +95,6 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        // ตัวอย่าง animation ตาย
         GetComponent<Animator>().SetBool("isDead", true);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
@@ -132,9 +129,8 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
 
-        status.Heal(amount); // เรียก method Heal() ของ PlayerStatus
-
-        // อัปเดต HealthBar หลังเพิ่ม HP
+        status.Heal(amount);
+        
         if (healthBar != null)
             healthBar.UpdateBar();
     }

@@ -119,7 +119,7 @@ public class Enemy : MonoBehaviour
         anim.SetTrigger("isHurt");
         StartCoroutine(HitFlash());
 
-        // ✅ อัปเดต HealthBar
+        //อัปเดต HealthBar
         //if (healthBar != null)
            // healthBar.UpdateBar();
         //else

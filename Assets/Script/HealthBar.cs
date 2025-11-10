@@ -12,8 +12,7 @@ public class HealthBar : MonoBehaviour
 
     private float _maxRightMask;
     private float _initialRightMask;
-
-    // ระยะ offset จากมุมซ้ายบนหน้าจอ
+    
     [SerializeField] private Vector3 screenOffset = new Vector3(50, -50, 10);
 
     private void Start()
@@ -28,13 +27,10 @@ public class HealthBar : MonoBehaviour
 
     private void LateUpdate()
     {
-        // แปลงตำแหน่งมุมซ้ายบนหน้าจอ → World Position
         Vector3 screenPos = new Vector3(screenOffset.x, Screen.height + screenOffset.y, screenOffset.z);
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(screenPos);
 
         transform.position = worldPos;
-
-        // ให้ UI หันหน้าเข้ากล้อง
         transform.rotation = Quaternion.LookRotation(transform.position - mainCamera.transform.position);
     }
 

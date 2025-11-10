@@ -6,7 +6,7 @@ using UnityEngine;
 public class Wave 
 {
     public int waveNumber;
-    public List<GameObject> enemyPrefabs; // prefabs to spawn
+    public List<GameObject> enemyPrefabs; 
     public int spawnCount = 5;
     public float spawnInterval = 1f;
     public Vector2 spawnPoint;

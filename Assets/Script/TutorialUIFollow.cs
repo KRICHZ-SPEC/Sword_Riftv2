@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TutorialUIFollow : MonoBehaviour
 {
-    public Transform target;      // ตัวละครที่ต้องการให้ UI ตาม
-    public Vector3 offset;        // ระยะห่างจากตัวละคร (เช่น เหนือหัว)
+    public Transform target;      
+    public Vector3 offset;        
 
     void LateUpdate()
     {
