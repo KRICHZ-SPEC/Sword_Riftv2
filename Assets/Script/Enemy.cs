@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Hit Flash")]
     public Color hitColor = Color.red;
-    public float flashDuration = 0.15f; // ระยะเวลาที่จะเป็นสีแดง
+    public float flashDuration = 0.15f;
 
     void Start()
     {
@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
         {
             if (dist > attackRange)
             {
-                anim.SetBool("isWalking", true); // 🎬 เดิน
+                anim.SetBool("isWalking", true);
                 Vector2 dir = (playerTransform.position - transform.position).normalized;
                 Vector2 newPos = rb.position + dir * speed * Time.deltaTime;
                 rb.MovePosition(newPos);
@@ -77,7 +77,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            anim.SetBool("isWalking", false); // ไม่มีผู้เล่นในระยะ
+            anim.SetBool("isWalking", false);
         }
     }
 
@@ -92,8 +92,7 @@ public class Enemy : MonoBehaviour
                 Attack(player);
 
             lastAttackTime = Time.time;
-
-            // ปิดสถานะโจมตีหลัง delay สั้น ๆ (ให้อนิเมชันจบ)
+            
             Invoke(nameof(EndAttack), 0.5f);
         }
     }
@@ -114,7 +113,7 @@ public class Enemy : MonoBehaviour
         hp -= amount;
         anim.SetTrigger("isHurt");
 
-        StartCoroutine(HitFlash()); // 👈 เพิ่มฟังก์ชันนี้ให้มอนแดง
+        StartCoroutine(HitFlash());
 
         if (hp <= 0)
         {
@@ -124,9 +123,9 @@ public class Enemy : MonoBehaviour
 
     IEnumerator HitFlash()
     {
-        sr.color = hitColor; // เปลี่ยนเป็นสีแดง
+        sr.color = hitColor;
         yield return new WaitForSeconds(flashDuration);
-        sr.color = Color.white; // กลับเป็นสีเดิม
+        sr.color = Color.white;
     }
 
     public virtual void Die()
@@ -167,7 +166,7 @@ public class Enemy : MonoBehaviour
             PlayerController2D player = other.GetComponent<PlayerController2D>();
             if (player != null)
             {
-                player.TakeDamage(30f); // ทดสอบความเสียหาย
+                player.TakeDamage(30f);
             }
         }
     }

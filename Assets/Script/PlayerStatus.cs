@@ -20,7 +20,7 @@ public class PlayerStatus
 
     // Event เมื่อเลเวลอัพ (UI/FX จะ subscribe ได้)
     public event Action<int> OnLevelUp; // ส่งเลเวลใหม่
-
+    
     // Constructor (เรียกตอนสร้าง PlayerStatus)
     public PlayerStatus(float initialHp = 100f, float initialMp = 50f)
     {

@@ -17,11 +17,19 @@ public class Player : MonoBehaviour
     public float moveSpeed = 5f;
     private Rigidbody2D rb;
 
-    // 🩸 เพิ่มส่วนใหม่
+    public HealthBar healthBar;
     private Animator anim;
     private SpriteRenderer sr;
     private bool isDead = false;
 
+    void Start()
+    {
+        if (status.maxHp <= 0) status.maxHp = 100f;
+        status.hp = status.maxHp;
+
+        // อัปเดต HealthBar ตอนเริ่ม
+        if (healthBar != null) healthBar.UpdateBar();
+    }
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -65,7 +73,8 @@ public class Player : MonoBehaviour
 
         status.TakeDamage(amount);
 
-        // ✅ flash ตัวแดง + animation
+        if (healthBar != null)
+            healthBar.UpdateBar();
         StartCoroutine(FlashRed());
         anim.SetTrigger("Hurt");
 
@@ -88,16 +97,13 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-
-        anim.SetBool("isDead", true); // เรียกเล่นแอนิเมชัน
-        rb.velocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Static;
+        // ตัวอย่าง animation ตาย
+        GetComponent<Animator>().SetBool("isDead", true);
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
-
-        Debug.Log("Player died");
-        Destroy(gameObject, 2f); // ลบตัวละครหลัง animation เล่น
+        Destroy(gameObject, 2f);
     }
-
+    
     public void PickupItem(Item item)
     {
         inventory.Add(item);
