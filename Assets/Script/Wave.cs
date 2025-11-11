@@ -9,7 +9,7 @@ public class Wave
     public List<GameObject> enemyPrefabs; 
     public int spawnCount = 5;
     public float spawnInterval = 1f;
-    public Vector2 spawnPoint;
+    public Transform spawnPoint;
 
     public IEnumerator SpawnEnemies(Transform parent) 
     {
@@ -18,7 +18,7 @@ public class Wave
             if (enemyPrefabs.Count == 0) yield break;
             int idx = Random.Range(0, enemyPrefabs.Count);
             var prefab = enemyPrefabs[idx];
-            GameObject.Instantiate(prefab, spawnPoint, Quaternion.identity, parent);
+            GameObject.Instantiate(prefab, spawnPoint.position, Quaternion.identity, parent);
             yield return new WaitForSeconds(spawnInterval);
         }
     }
