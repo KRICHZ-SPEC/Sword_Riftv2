@@ -1,41 +1,57 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class WaveManager : MonoBehaviour 
+public class WaveManager : MonoBehaviour
 {
-    public List<Wave> waves = new List<Wave>();
-    public int currentWave = 0;
-    public Transform enemyParent;
-    public float timeBetweenWaves = 3f;
+    [Header("Wave Settings")]
+    public List<Waves> waves = new List<Waves>();
 
-    void Start() 
+    private int currentWave = 0;
+    private bool waveActive = false;
+
+    void Start()
     {
-        if (waves.Count > 0) StartCoroutine(StartWaves());
+        StartWave(0);
     }
 
-    IEnumerator StartWaves() 
+    public void StartWave(int index)
     {
-        while (currentWave < waves.Count) 
+        if (index >= waves.Count) return;
+
+        currentWave = index;
+        waveActive = true;
+
+        Debug.Log("Start Wave " + (index + 1));
+
+        waves[currentWave].SpawnEnemies();
+
+        // Show wave tutorial UI
+        if (currentWave == 0)
         {
-            yield return StartCoroutine(RunWave(waves[currentWave]));
+            FindObjectOfType<TutorialUI>().Show("โจมตีหุ่นฝึกเพื่อลองระบบต่อสู้!");
+        }
+    }
+
+    public void OnEnemyKilled()
+    {
+        if (!waveActive) return;
+
+        if (waves[currentWave].IsWaveCleared())
+        {
+            waveActive = false;
+
+            Debug.Log("Wave " + (currentWave + 1) + " Cleared!");
+
             currentWave++;
-            yield return new WaitForSeconds(timeBetweenWaves);
-        }
-        OnAllWavesCleared();
-    }
 
-    IEnumerator RunWave(Wave wave) 
-    {
-        yield return StartCoroutine(wave.SpawnEnemies(enemyParent));
-        while (enemyParent.childCount > 0) 
-        {
-            yield return null;
+            if (currentWave < waves.Count)
+            {
+                StartWave(currentWave);
+            }
+            else
+            {
+                Debug.Log("All Waves Completed!");
+            }
         }
-    }
-
-    void OnAllWavesCleared() 
-    {
-        Debug.Log("All waves cleared!");
     }
 }

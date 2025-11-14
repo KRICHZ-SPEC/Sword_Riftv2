@@ -25,7 +25,7 @@ public class TutorialUI : MonoBehaviour
             canvasGroup.alpha = 0f;
     }
 
-    public void ShowMessage(string message, float duration = -1f)
+    public void Show(string message, float duration = -1f)
     {
         if (duration <= 0) duration = defaultDisplayTime;
         

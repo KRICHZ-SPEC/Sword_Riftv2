@@ -1,25 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
-public class Wave 
+public class Waves
 {
-    public int waveNumber;
-    public List<GameObject> enemyPrefabs; 
-    public int spawnCount = 5;
-    public float spawnInterval = 1f;
-    public Transform spawnPoint;
+    public string waveName;
+    public List<Enemy> enemyPrefabs;
+    public Transform[] spawnPoints;
 
-    public IEnumerator SpawnEnemies(Transform parent) 
+    private List<Enemy> aliveEnemies = new List<Enemy>();
+
+    public void SpawnEnemies()
     {
-        for (int i = 0; i < spawnCount; i++) 
+        aliveEnemies.Clear();
+
+        for (int i = 0; i < enemyPrefabs.Count; i++)
         {
-            if (enemyPrefabs.Count == 0) yield break;
-            int idx = Random.Range(0, enemyPrefabs.Count);
-            var prefab = enemyPrefabs[idx];
-            GameObject.Instantiate(prefab, spawnPoint.position, Quaternion.identity, parent);
-            yield return new WaitForSeconds(spawnInterval);
+            foreach (Transform spawn in spawnPoints)
+            {
+                Enemy e = GameObject.Instantiate(enemyPrefabs[i], spawn.position, Quaternion.identity);
+                aliveEnemies.Add(e);
+            }
         }
+    }
+
+    public bool IsWaveCleared()
+    {
+        aliveEnemies.RemoveAll(e => e == null);
+        return aliveEnemies.Count == 0;
     }
 }

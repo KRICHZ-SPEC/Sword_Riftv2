@@ -28,8 +28,6 @@ public class Enemy : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
     protected float lastAttackTime;
-    //[Header("Health Bar")]
-    //public EnemyHealthBar healthBar;
     protected bool isDead = false;
 
     [Header("Hit Flash")]
@@ -119,12 +117,6 @@ public class Enemy : MonoBehaviour
         anim.SetTrigger("isHurt");
         StartCoroutine(HitFlash());
 
-        //อัปเดต HealthBar
-        //if (healthBar != null)
-           // healthBar.UpdateBar();
-        //else
-            //Debug.LogWarning("HealthBar not assigned!");
-
         if (hp <= 0)
             Die();
     }
@@ -136,19 +128,16 @@ public class Enemy : MonoBehaviour
         sr.color = Color.white;
     }
 
-    public virtual void Die()
+    void Die()
     {
-        if (isDead) return;
-        isDead = true;
+        // ลองหา Wave1Manager ก่อน
+        var wave = FindObjectOfType<Wave1Manager>();
+        if (wave != null)
+            wave.OnEnemyKilled();
 
-        anim.SetBool("isDead", true);
-        rb.velocity = Vector2.zero;
-        rb.isKinematic = true;
-        GetComponent<Collider2D>().enabled = false;
-
-        DropItem();
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject);
     }
+    
 
     protected virtual void DropItem()
     {
