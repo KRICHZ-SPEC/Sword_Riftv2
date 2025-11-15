@@ -1,22 +1,23 @@
 using UnityEngine;
 
-using UnityEngine;
-
 [System.Serializable]
-public class ActiveSkill
+public abstract class ActiveSkill : ScriptableObject
 {
-    public int skillID;
-    public string skillName;
     public float cooldown = 1f;
-    public float lastUsedTime = -999f;
+    protected float lastUsedTime = -999f;
 
     public bool CanUse()
     {
         return Time.time >= lastUsedTime + cooldown;
     }
 
-    public virtual void Activate(Player player)
+    public void UseSkill(Player player)
     {
-        Debug.Log("Use Skill: " + skillName);
+        if (!CanUse()) return;
+
+        lastUsedTime = Time.time;
+        Activate(player);
     }
+
+    public abstract void Activate(Player player);
 }

@@ -10,10 +10,14 @@ public class Player : MonoBehaviour
     public string playerName;
     public Vector2 velocity;
     public PlayerStatus status;
-    public List<ActiveSkill> skills = new List<ActiveSkill>();
+
+    public List<ActiveSkill> skills = new List<ActiveSkill>(); 
+
+    public FireBallSkill fireBallSkill;
     public Vector2 lastMoveDirection = Vector2.right;
     public List<Item> inventory = new List<Item>();
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
+
 
     public float moveSpeed = 5f;
     private Rigidbody2D rb;
@@ -40,14 +44,16 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        if (moveInput != Vector2.zero)
-            lastMoveDirection = moveInput;
+        // อัปเดตทิศทางผู้เล่นเดิน
+        Vector2 move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (move != Vector2.zero)
+            lastMoveDirection = move;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        // ปุ่มกดใช้สกิล
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            if (skills.Count > 0)
-                skills[0].Activate(this);
+            fireBallSkill.Activate(this);        // ← อันนี้ถูกต้อง
+            Wave2Manager.Instance.OnUseSkill();
         }
     }
 
