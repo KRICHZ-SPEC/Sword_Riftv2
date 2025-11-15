@@ -1,53 +1,37 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyDummy : MonoBehaviour
 {
-    [Header("Stats")]
-    public float maxHP = 100f;
-    private float currentHP;
+    public float maxHp = 30f;
+    public float currentHp;
 
-    [Header("Optional Components")]
-    public Animator animator;
-    public GameObject deathEffect;
+    public GameObject pickupPrefab;
+    public Transform pickupSpawnPoint;
 
-    private bool isDead = false;
-
-    void Start()
+    void Awake()
     {
-        currentHP = maxHP;
-        
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        currentHp = maxHp;
     }
-    
-    public void TakeDamage(float damage)
+
+    public void TakeDamage(float dmg)
     {
-        if (isDead)
-            return;
+        currentHp -= dmg;
 
-        currentHP -= damage;
-        
-        if (animator != null)
-            animator.SetTrigger("Hit");
-
-        if (currentHP <= 0)
-        {
+        if (currentHp <= 0)
             Die();
-        }
     }
 
-    private void Die()
+    void Die()
     {
-        isDead = true;
-        
-        if (animator != null)
-            animator.SetTrigger("Die");
-        
-        if (deathEffect != null)
-            Instantiate(deathEffect, transform.position, Quaternion.identity);
-        
-        Destroy(gameObject, 0.5f);
+        SpawnPickup();
+        Destroy(gameObject);
+    }
+
+    void SpawnPickup()
+    {
+        if (pickupPrefab == null) return;
+
+        Vector3 pos = pickupSpawnPoint ? pickupSpawnPoint.position : transform.position;
+        Instantiate(pickupPrefab, pos, Quaternion.identity);
     }
 }

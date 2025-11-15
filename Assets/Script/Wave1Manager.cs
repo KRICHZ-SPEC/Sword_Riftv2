@@ -1,117 +1,124 @@
+using System.Collections;
 using UnityEngine;
 
 public class Wave1Manager : MonoBehaviour
 {
+    public static Wave1Manager Instance;
+
+    [Header("References")]
     public TutorialUI tutorialUI;
-    public Player player;
+    public GameObject enemyDummyPrefab;
+    public Transform enemySpawnPoint;
+    public GameObject pickupPrefab;
+    public Transform pickupSpawnPoint;
 
-    public EnemyDummy dummyEnemy;         // หุ่นฝึก
-    public GameObject pickUpItem;         // ไอเท็มที่ต้องเก็บ
-    public Enemy realEnemy;               // ศัตรูจริงตัวสุดท้าย
+    [Header("Tutorial Timings")]
+    public float showDuration = 2f;
 
-    private int step = 0;
-    private bool itemPicked = false;
-    private bool dummyKilled = false;
-    private bool realEnemyKilled = false;
+    bool moved = false;
+    bool jumped = false;
+    bool attacked = false;
+    bool dummyDead = false;
+    bool pickupCollected = false;
+
+    GameObject currentDummy;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
-        Debug.Log("Wave1Manager Start()");
-        step = 0;
-        ShowStepMessage();
+        StartCoroutine(RunTutorial());
     }
 
-    void Update()
+    IEnumerator RunTutorial()
     {
-        switch (step)
+        yield return tutorialUI.ShowText("Wave 1: Control Training", showDuration);
+        
+        yield return tutorialUI.ShowText("Press A or D to move", showDuration);
+        yield return StartCoroutine(WaitUntilMove());
+        
+        yield return tutorialUI.ShowText("Press SpaceBar to jump", showDuration);
+        yield return StartCoroutine(WaitUntilJump());
+        
+        yield return tutorialUI.ShowText("Press J to attack", showDuration);
+        yield return StartCoroutine(WaitUntilAttack());
+        
+        yield return tutorialUI.ShowText("Good! Destroy the training dummy!", showDuration);
+        SpawnDummy();
+
+        yield return new WaitUntil(() => dummyDead == true);
+        
+        yield return tutorialUI.ShowText("Collect items dropped by enemies", showDuration);
+        yield return new WaitUntil(() => pickupCollected == true);
+
+        yield return tutorialUI.ShowText("Wave 1 Complete!", showDuration);
+    }
+
+    IEnumerator WaitUntilMove()
+    {
+        moved = false;
+
+        while (!moved)
         {
-            // 0 : Move
-            case 0:
-                if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-                    NextStep();
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+            {
+                moved = true;
                 break;
-
-            // 1 : Jump
-            case 1:
-                if (Input.GetKeyDown(KeyCode.Space))
-                    NextStep();
-                break;
-
-            // 2 : Attack dummy
-            case 2:
-                if (dummyEnemy == null || dummyEnemy.maxHP <= 0)
-                {
-                    dummyKilled = true;
-                    NextStep();
-                }
-                break;
-
-            // 3 : Pick item
-            case 3:
-                if (itemPicked)
-                    NextStep();
-                break;
-
-            // 4 : Defeat real enemy
-            case 4:
-                if (realEnemy == null || realEnemy.hp <= 0)
-                {
-                    realEnemyKilled = true;
-                    NextStep();
-                }
-                break;
-
-            // 5 : Tutorial Complete
-            case 5:
-                // จบแล้วไม่ต้องทำอะไร
-                break;
+            }
+            yield return null;
+        }
+    }
+    IEnumerator WaitUntilJump()
+    {
+        jumped = false;
+        while (!jumped)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                jumped = true;
+            yield return null;
         }
     }
 
-    // เรียกจาก PickupItem.cs
-    public void OnItemPicked()
+    IEnumerator WaitUntilAttack()
     {
-        itemPicked = true;
-    }
+        attacked = false;
 
-    // เปลี่ยน Step
-    void NextStep()
-    {
-        step++;
-        ShowStepMessage();
-    }
-    public void OnEnemyKilled()
-    {
-        if (step == 4)
+        while (!attacked)
         {
-            NextStep();
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                attacked = true;
+                break;
+            }
+            yield return null;
         }
     }
 
-    // ข้อความแต่ละ Step
-    void ShowStepMessage()
+    void SpawnDummy()
     {
-        Debug.Log("Show message step: " + step);
-        switch (step)
-        {
-            case 0:
-                tutorialUI.Show("Use A / D to move");
-                break;
-            case 1:
-                tutorialUI.Show("Press SPACE to jump");
-                break;
-            case 2:
-                tutorialUI.Show("Press J to attack the training dummy");
-                break;
-            case 3:
-                tutorialUI.Show("Walk to pick up the item on the ground");
-                break;
-            case 4:
-                tutorialUI.Show("Defeat the real enemy that appears!");
-                break;
-            case 5:
-                tutorialUI.Show("Tutorial Complete!");
-                break;
-        }
+        currentDummy = Instantiate(enemyDummyPrefab, enemySpawnPoint.position, Quaternion.identity);
+
+        var dummy = currentDummy.GetComponent<EnemyDummy>();
+        dummy.pickupPrefab = pickupPrefab;
+        dummy.pickupSpawnPoint = pickupSpawnPoint;
+
+        StartCoroutine(CheckDummyAlive());
+    }
+
+    IEnumerator CheckDummyAlive()
+    {
+        dummyDead = false;
+        while (currentDummy != null)
+            yield return null;
+
+        dummyDead = true;
+    }
+
+    public void OnPickupCollected()
+    {
+        pickupCollected = true;
     }
 }

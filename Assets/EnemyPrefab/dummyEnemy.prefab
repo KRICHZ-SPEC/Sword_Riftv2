@@ -202,9 +202,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd952dcc61d137c41a4646e2b3014ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDummy
-  maxHP: 100
-  animator: {fileID: 5072350168591889884}
-  deathEffect: {fileID: 820041042908332088}
+  maxHp: 30
+  currentHp: 30
+  pickupPrefab: {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
+  pickupSpawnPoint: {fileID: 0}
 --- !u!114 &-924328473886357955
 MonoBehaviour:
   m_ObjectHideFlags: 0

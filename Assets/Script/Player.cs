@@ -39,9 +39,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return;
-        HandleMovementInput();
-        UpdateStatusEffects();
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            Attack();
+        }
     }
 
     void HandleMovementInput()
@@ -59,10 +60,19 @@ public class Player : MonoBehaviour
         rb.velocity = dir * moveSpeed;
     }
 
-    public void Attack()
+    void Attack()
     {
-        Debug.Log("Player attack");
-        anim.SetTrigger("Attack");
+        // หา Dummy รอบตัว
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1f);
+
+        foreach (var h in hits)
+        {
+            EnemyDummy dummy = h.GetComponent<EnemyDummy>();
+            if (dummy)
+            {
+                dummy.TakeDamage(10f);
+            }
+        }
     }
 
     public void TakeDamage(float amount)

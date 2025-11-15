@@ -24,11 +24,10 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Start Wave " + (index + 1));
 
         waves[currentWave].SpawnEnemies();
-
-        // Show wave tutorial UI
+        
         if (currentWave == 0)
         {
-            FindObjectOfType<TutorialUI>().Show("โจมตีหุ่นฝึกเพื่อลองระบบต่อสู้!");
+            FindObjectOfType<TutorialUI>().SendMessage("Attack the training dummy to test the combat system!");
         }
     }
 

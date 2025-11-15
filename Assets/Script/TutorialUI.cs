@@ -1,87 +1,67 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 
 public class TutorialUI : MonoBehaviour
 {
-    [Header("UI Components")]
-    public Text uiText;                     
-    public TextMeshProUGUI tmpText;         
-    public CanvasGroup canvasGroup;        
+    public TextMeshProUGUI tmpText;      
+    public CanvasGroup canvasGroup;      
+    public float fadeTime = 0.35f;
 
-    [Header("Settings")]
-    public float fadeDuration = 0.5f;      
-    public float defaultDisplayTime = 3f;  
-
-    private Coroutine currentRoutine;
+    void Reset()
+    {
+        // optional: try to auto-find
+        tmpText = GetComponentInChildren<TextMeshProUGUI>();
+        canvasGroup = GetComponent<CanvasGroup>();
+    }
 
     void Awake()
     {
         if (canvasGroup == null)
-            canvasGroup = GetComponent<CanvasGroup>();
-
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0f;
+            canvasGroup = gameObject.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        canvasGroup.alpha = 0f;
+        if (tmpText) tmpText.text = "";
     }
 
-    public void Show(string message, float duration = -1f)
+    public void ShowTextImmediate(string text)
     {
-        if (duration <= 0) duration = defaultDisplayTime;
-        
-        if (currentRoutine != null)
-            StopCoroutine(currentRoutine);
-
-        currentRoutine = StartCoroutine(ShowMessageRoutine(message, duration));
+        if (tmpText) tmpText.text = text;
+        canvasGroup.alpha = 1f;
     }
 
-    IEnumerator ShowMessageRoutine(string message, float duration)
+    public void HideImmediate()
     {
-        SetText(message);
-        
-        yield return StartCoroutine(FadeCanvas(0, 1, fadeDuration));
-        
-        yield return new WaitForSeconds(duration);
-        
-        yield return StartCoroutine(FadeCanvas(1, 0, fadeDuration));
+        if (tmpText) tmpText.text = "";
+        canvasGroup.alpha = 0f;
     }
 
-    IEnumerator FadeCanvas(float from, float to, float duration)
+    public Coroutine ShowText(string text, float displaySeconds)
+    {
+        return StartCoroutine(DoShowText(text, displaySeconds));
+    }
+
+    IEnumerator DoShowText(string text, float displaySeconds)
+    {
+        if (tmpText) tmpText.text = text;
+        yield return StartCoroutine(Fade(0f, 1f, fadeTime));
+        yield return new WaitForSeconds(displaySeconds);
+        yield return StartCoroutine(Fade(1f, 0f, fadeTime));
+        if (tmpText) tmpText.text = "";
+    }
+
+    IEnumerator Fade(float from, float to, float time)
     {
         float t = 0f;
-        while (t < duration)
+        while (t < time)
         {
             t += Time.deltaTime;
-            float normalized = t / duration;
-            if (canvasGroup != null)
-                canvasGroup.alpha = Mathf.Lerp(from, to, normalized);
+            float a = Mathf.Lerp(from, to, t / time);
+            canvasGroup.alpha = a;
             yield return null;
         }
-
-        if (canvasGroup != null)
-            canvasGroup.alpha = to;
-    }
-
-    private void SetText(string message)
-    {
-        if (uiText != null)
-            uiText.text = message;
-        if (tmpText != null)
-            tmpText.text = message;
-    }
-
-    public void SetInstant(string message)
-    {
-        StopAllCoroutines();
-        SetText(message);
-        if (canvasGroup != null)
-            canvasGroup.alpha = 1f;
-    }
-
-    public void HideInstant()
-    {
-        StopAllCoroutines();
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0f;
+        canvasGroup.alpha = to;
     }
 }

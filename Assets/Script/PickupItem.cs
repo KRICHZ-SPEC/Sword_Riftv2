@@ -2,13 +2,11 @@ using UnityEngine;
 
 public class PickupItem : MonoBehaviour
 {
-    public Wave1Manager wave;
-
-    private void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag("Player"))
         {
-            wave.OnItemPicked();
+            Wave1Manager.Instance.OnPickupCollected();
             Destroy(gameObject);
         }
     }
