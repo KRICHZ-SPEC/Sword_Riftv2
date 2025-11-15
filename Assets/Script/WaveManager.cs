@@ -5,7 +5,8 @@ public class WaveManager : MonoBehaviour
 {
     [Header("Wave Settings")]
     public List<Waves> waves = new List<Waves>();
-
+    public Player player;          
+    public ActiveSkill fireballSkill; 
     private int currentWave = 0;
     private bool waveActive = false;
 
@@ -25,9 +26,13 @@ public class WaveManager : MonoBehaviour
 
         waves[currentWave].SpawnEnemies();
         
-        if (currentWave == 0)
+        if (currentWave == 1) 
         {
-            FindObjectOfType<TutorialUI>().SendMessage("Attack the training dummy to test the combat system!");
+            if (player != null && fireballSkill != null)
+            {
+                player.skills.Add(fireballSkill);
+                Debug.Log("Fireball Skill Unlocked!");
+            }
         }
     }
 

@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public Vector2 velocity;
     public PlayerStatus status;
     public List<ActiveSkill> skills = new List<ActiveSkill>();
+    public Vector2 lastMoveDirection = Vector2.right;
     public List<Item> inventory = new List<Item>();
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
 
@@ -39,9 +40,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (moveInput != Vector2.zero)
+            lastMoveDirection = moveInput;
+
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            Attack();
+            if (skills.Count > 0)
+                skills[0].Activate(this);
         }
     }
 
@@ -62,7 +68,6 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-        // หา Dummy รอบตัว
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1f);
 
         foreach (var h in hits)

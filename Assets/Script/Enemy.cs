@@ -133,7 +133,7 @@ public class Enemy : MonoBehaviour
         // ลองหา Wave1Manager ก่อน
         var wave = FindObjectOfType<Wave1Manager>();
         if (wave != null)
-            //wave.OnEnemyKilled();
+            wave.OnPickupCollected();
 
         Destroy(gameObject);
     }

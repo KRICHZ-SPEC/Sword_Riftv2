@@ -1,25 +1,22 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Skills/Fireball")]
-public class FireballSkill : ActiveSkill 
+public class PlayerSkill : MonoBehaviour
 {
-    public GameObject projectilePrefab;
-    public float speed = 8f;
-    public float damage = 20f;
+    public GameObject fireballPrefab;
+    public Transform firePoint; 
 
-    protected override void Activate(Player player) 
+    void Update()
     {
-        if (projectilePrefab == null) 
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.LogWarning("No projectile prefab assigned.");
-            return;
+            CastFireBall();
         }
+    }
 
-        var go = GameObject.Instantiate(projectilePrefab, player.transform.position + Vector3.up * 0.5f, Quaternion.identity);
-        var proj = go.GetComponent<Projectile>();
-        if (proj != null) 
-        {
-            proj.Initialize(damage, speed, player.gameObject.tag);
-        }
+    void CastFireBall()
+    {
+        Vector3 spawnPos = firePoint.position;
+
+        Instantiate(fireballPrefab, spawnPos, Quaternion.identity);
     }
 }

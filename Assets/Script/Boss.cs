@@ -30,7 +30,7 @@ public class Boss : Enemy
         {
             if (s != null && s.CanUse()) 
             {
-                s.Use(FindObjectOfType<Player>());
+                //(FindObjectOfType<Player>());
             }
         }
     }

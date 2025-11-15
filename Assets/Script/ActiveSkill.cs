@@ -1,27 +1,22 @@
 using UnityEngine;
 
-public abstract class ActiveSkill : ScriptableObject 
+using UnityEngine;
+
+[System.Serializable]
+public class ActiveSkill
 {
     public int skillID;
     public string skillName;
-    public float cooldown;
+    public float cooldown = 1f;
     public float lastUsedTime = -999f;
-    public float mpCost = 0f;
 
-    public bool CanUse() 
+    public bool CanUse()
     {
-        return Time.time - lastUsedTime >= cooldown;
+        return Time.time >= lastUsedTime + cooldown;
     }
 
-    public virtual bool Use(Player player) 
+    public virtual void Activate(Player player)
     {
-        if (!CanUse()) return false;
-        if (player.status.mp < mpCost) return false;
-        player.status.ConsumeMp(mpCost);
-        lastUsedTime = Time.time;
-        Activate(player);
-        return true;
+        Debug.Log("Use Skill: " + skillName);
     }
-
-    protected abstract void Activate(Player player);
 }
