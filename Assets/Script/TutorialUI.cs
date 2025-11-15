@@ -1,67 +1,39 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class TutorialUI : MonoBehaviour
 {
-    public TextMeshProUGUI tmpText;      
-    public CanvasGroup canvasGroup;      
-    public float fadeTime = 0.35f;
+    public TextMeshProUGUI tmpText;
+    public CanvasGroup canvasGroup;
 
-    void Reset()
-    {
-        // optional: try to auto-find
-        tmpText = GetComponentInChildren<TextMeshProUGUI>();
-        canvasGroup = GetComponent<CanvasGroup>();
-    }
+    public float fadeDuration = 0.5f;
 
     void Awake()
     {
-        if (canvasGroup == null)
-            canvasGroup = gameObject.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-        canvasGroup.alpha = 0f;
-        if (tmpText) tmpText.text = "";
+        canvasGroup.alpha = 0;
     }
 
-    public void ShowTextImmediate(string text)
+    public IEnumerator ShowText(string message, float displayTime = 2f)
     {
-        if (tmpText) tmpText.text = text;
-        canvasGroup.alpha = 1f;
-    }
-
-    public void HideImmediate()
-    {
-        if (tmpText) tmpText.text = "";
-        canvasGroup.alpha = 0f;
-    }
-
-    public Coroutine ShowText(string text, float displaySeconds)
-    {
-        return StartCoroutine(DoShowText(text, displaySeconds));
-    }
-
-    IEnumerator DoShowText(string text, float displaySeconds)
-    {
-        if (tmpText) tmpText.text = text;
-        yield return StartCoroutine(Fade(0f, 1f, fadeTime));
-        yield return new WaitForSeconds(displaySeconds);
-        yield return StartCoroutine(Fade(1f, 0f, fadeTime));
-        if (tmpText) tmpText.text = "";
-    }
-
-    IEnumerator Fade(float from, float to, float time)
-    {
-        float t = 0f;
-        while (t < time)
+        tmpText.text = message;
+        
+        float t = 0;
+        while (t < fadeDuration)
         {
             t += Time.deltaTime;
-            float a = Mathf.Lerp(from, to, t / time);
-            canvasGroup.alpha = a;
+            canvasGroup.alpha = Mathf.Lerp(0, 1, t / fadeDuration);
             yield return null;
         }
-        canvasGroup.alpha = to;
+
+        yield return new WaitForSeconds(displayTime);
+        
+        t = 0;
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(1, 0, t / fadeDuration);
+            yield return null;
+        }
     }
 }

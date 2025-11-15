@@ -12,7 +12,7 @@ public class Wave1Manager : MonoBehaviour
     public GameObject pickupPrefab;
     public Transform pickupSpawnPoint;
 
-    [Header("Tutorial Timings")]
+    [Header("Settings")]
     public float showDuration = 2f;
 
     bool moved = false;
@@ -35,42 +35,45 @@ public class Wave1Manager : MonoBehaviour
 
     IEnumerator RunTutorial()
     {
-        yield return tutorialUI.ShowText("Wave 1: Control Training", showDuration);
-        
+        yield return tutorialUI.ShowText("Wave 1: Basic Control Practice", showDuration);
+
         yield return tutorialUI.ShowText("Press A or D to move", showDuration);
         yield return StartCoroutine(WaitUntilMove());
-        
+        yield return null;
+
         yield return tutorialUI.ShowText("Press SpaceBar to jump", showDuration);
         yield return StartCoroutine(WaitUntilJump());
-        
+        yield return null;
+
         yield return tutorialUI.ShowText("Press J to attack", showDuration);
         yield return StartCoroutine(WaitUntilAttack());
-        
-        yield return tutorialUI.ShowText("Good! Destroy the training dummy!", showDuration);
+        yield return null;
+
+        yield return tutorialUI.ShowText("Beat the training dummy", showDuration);
         SpawnDummy();
-
         yield return new WaitUntil(() => dummyDead == true);
-        
-        yield return tutorialUI.ShowText("Collect items dropped by enemies", showDuration);
-        yield return new WaitUntil(() => pickupCollected == true);
+        yield return null;
 
+        yield return tutorialUI.ShowText("Pick up items dropped by enemies", showDuration);
+        yield return new WaitUntil(() => pickupCollected == true);
+        yield return null;
+        
         yield return tutorialUI.ShowText("Wave 1 Complete!", showDuration);
+
+        Debug.Log("WAVE 1 DONE");
     }
 
     IEnumerator WaitUntilMove()
     {
         moved = false;
-
         while (!moved)
         {
             if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
-            {
                 moved = true;
-                break;
-            }
             yield return null;
         }
     }
+
     IEnumerator WaitUntilJump()
     {
         jumped = false;
@@ -85,14 +88,10 @@ public class Wave1Manager : MonoBehaviour
     IEnumerator WaitUntilAttack()
     {
         attacked = false;
-
         while (!attacked)
         {
             if (Input.GetKeyDown(KeyCode.J))
-            {
                 attacked = true;
-                break;
-            }
             yield return null;
         }
     }

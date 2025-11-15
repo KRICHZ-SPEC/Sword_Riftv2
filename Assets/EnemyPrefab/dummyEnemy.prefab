@@ -227,6 +227,7 @@ MonoBehaviour:
   detectRadius: 6
   attackRange: 1.2
   attackCooldown: 1
-  dropTable: []
+  dropTable:
+  - {fileID: 3459898795820985732, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.15

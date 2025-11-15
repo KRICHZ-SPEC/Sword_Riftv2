@@ -1,4 +1,4 @@
-using System.Collections;      // <<-- จำเป็นสำหรับ IEnumerator
+using System.Collections;  
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]

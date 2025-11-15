@@ -15,10 +15,11 @@ public class EnemyDummy : MonoBehaviour
 
     public void TakeDamage(float dmg)
     {
-        currentHp -= dmg;
-
-        if (currentHp <= 0)
-            Die();
+        maxHp -= dmg;
+        if (maxHp <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Die()
