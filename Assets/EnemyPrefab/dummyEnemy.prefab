@@ -220,9 +220,9 @@ MonoBehaviour:
   enemyID: 0
   type: 
   hp: 100
-  damage: 10
-  speed: 2
-  maxHp: 50
+  damage: 0
+  speed: 0
+  maxHp: 100
   detectRadius: 6
   attackRange: 1.2
   attackCooldown: 1
