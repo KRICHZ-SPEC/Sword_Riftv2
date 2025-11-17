@@ -9,13 +9,7 @@ public class WaveManager : MonoBehaviour
     public ActiveSkill fireballSkill; 
     private int currentWave = 0;
     private bool waveActive = false;
-
-    // --- ลบ void Start() ออกจากไฟล์นี้ ---
-    // void Start()
-    // {
-    //     StartWave(0); // <--- ลบส่วนนี้ทิ้ง
-    // }
-
+    
     public void StartWave(int index)
     {
         if (index >= waves.Count) return;
