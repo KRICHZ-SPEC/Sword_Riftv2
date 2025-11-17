@@ -10,10 +10,11 @@ public class WaveManager : MonoBehaviour
     private int currentWave = 0;
     private bool waveActive = false;
 
-    void Start()
-    {
-        StartWave(0);
-    }
+    // --- ลบ void Start() ออกจากไฟล์นี้ ---
+    // void Start()
+    // {
+    //     StartWave(0); // <--- ลบส่วนนี้ทิ้ง
+    // }
 
     public void StartWave(int index)
     {
@@ -43,9 +44,7 @@ public class WaveManager : MonoBehaviour
         if (waves[currentWave].IsWaveCleared())
         {
             waveActive = false;
-
             Debug.Log("Wave " + (currentWave + 1) + " Cleared!");
-
             currentWave++;
 
             if (currentWave < waves.Count)

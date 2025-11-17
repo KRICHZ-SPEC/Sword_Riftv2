@@ -11,6 +11,9 @@ public class Wave1Manager : MonoBehaviour
     public Transform enemySpawnPoint;
     public GameObject pickupPrefab;
     public Transform pickupSpawnPoint;
+    
+    [Header("Next Wave")]
+    public Wave2Manager wave2Manager; 
 
     [Header("Settings")]
     public float showDuration = 2f;
@@ -39,28 +42,34 @@ public class Wave1Manager : MonoBehaviour
 
         yield return tutorialUI.ShowText("Press A or D to move", showDuration);
         yield return StartCoroutine(WaitUntilMove());
-        yield return null;
 
         yield return tutorialUI.ShowText("Press SpaceBar to jump", showDuration);
         yield return StartCoroutine(WaitUntilJump());
-        yield return null;
 
         yield return tutorialUI.ShowText("Press J to attack", showDuration);
         yield return StartCoroutine(WaitUntilAttack());
-        yield return null;
 
         yield return tutorialUI.ShowText("Beat the training dummy", showDuration);
         SpawnDummy();
         yield return new WaitUntil(() => dummyDead == true);
-        yield return null;
 
         yield return tutorialUI.ShowText("Pick up items", showDuration);
         yield return new WaitUntil(() => pickupCollected == true);
-        yield return null;
         
         yield return tutorialUI.ShowText("Wave 1 Complete!", showDuration);
-
         Debug.Log("WAVE 1 DONE");
+        
+        if (wave2Manager != null)
+        {
+            wave2Manager.enabled = true; 
+            wave2Manager.BeginWave2Tutorial(); 
+        }
+        else
+        {
+            Debug.LogError("Wave1Manager ยังไม่ได้เชื่อมต่อกับ Wave2Manager!");
+        }
+        
+        this.enabled = false;
     }
 
     IEnumerator WaitUntilMove()
@@ -99,11 +108,9 @@ public class Wave1Manager : MonoBehaviour
     void SpawnDummy()
     {
         currentDummy = Instantiate(enemyDummyPrefab, enemySpawnPoint.position, Quaternion.identity);
-
         var dummy = currentDummy.GetComponent<EnemyDummy>();
         dummy.pickupPrefab = pickupPrefab;
         dummy.pickupSpawnPoint = pickupSpawnPoint;
-
         StartCoroutine(CheckDummyAlive());
     }
 
@@ -112,7 +119,6 @@ public class Wave1Manager : MonoBehaviour
         dummyDead = false;
         while (currentDummy != null)
             yield return null;
-
         dummyDead = true;
     }
 

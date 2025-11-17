@@ -13,11 +13,10 @@ GameObject:
   - component: {fileID: 5072350168591889884}
   - component: {fileID: 9208020317279807830}
   - component: {fileID: 3229349520290751304}
-  - component: {fileID: -924328473886357955}
   - component: {fileID: 5524672524512863453}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: dummyEnemy
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,33 +155,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd952dcc61d137c41a4646e2b3014ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDummy
-  maxHp: 30
-  currentHp: 30
+  maxHp: 100
+  currentHp: 100
   pickupPrefab: {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
   pickupSpawnPoint: {fileID: 0}
---- !u!114 &-924328473886357955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820041042908332088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7eb077e2051ce348a543d8cf2966e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  enemyID: 0
-  type: 
-  hp: 100
-  damage: 0
-  speed: 0
-  maxHp: 100
-  detectRadius: 6
-  attackRange: 1.2
-  attackCooldown: 1
-  dropTable:
-  - {fileID: 3459898795820985732, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.15
 --- !u!70 &5524672524512863453

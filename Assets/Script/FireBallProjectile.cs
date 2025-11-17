@@ -29,8 +29,7 @@ public class FireBallProjectile : MonoBehaviour
 
             Destroy(gameObject);
         }
-
-        // ชนกำแพง/พื้นก็หาย
+        
         if (col.CompareTag("Ground") || col.CompareTag("Obstacle"))
         {
             Destroy(gameObject);

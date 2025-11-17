@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 325963308861342847}
   - component: {fileID: -4191654147797690369}
   m_Layer: 8
-  m_Name: FireBall
-  m_TagString: PlayerSkill
+  m_Name: NewFireBallSkill
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

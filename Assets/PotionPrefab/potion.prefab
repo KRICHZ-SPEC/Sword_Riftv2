@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4078145800032769470}
   - component: {fileID: 9070036794354489988}
-  - component: {fileID: 3459898795820985732}
   - component: {fileID: 2242349391304161657}
   - component: {fileID: 168810522712963973}
+  - component: {fileID: -5052336689477463821}
+  - component: {fileID: 540000748926704458}
   m_Layer: 0
   m_Name: potion
   m_TagString: Player
@@ -93,23 +94,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3459898795820985732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7670700632336421613}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a09b69d189343a41ae092baa7668503, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Item
-  itemID: 1
-  itemName: potion
-  type: 0
-  value: 100
-  rarity: 0
 --- !u!61 &2242349391304161657
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -183,3 +167,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-5052336689477463821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7670700632336421613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115b94cb32ecd2b4d8ad69c0527647ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupItem
+--- !u!114 &540000748926704458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7670700632336421613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a09b69d189343a41ae092baa7668503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  itemID: 1
+  itemName: Potion
+  type: 0
+  value: 100
+  rarity: 0

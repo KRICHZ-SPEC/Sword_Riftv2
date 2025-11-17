@@ -1,4 +1,4 @@
-using System.Collections;  
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -18,6 +18,7 @@ public class PlayerController2D : MonoBehaviour
     [Header("Attack Settings")]
     public float attackCooldown = 0.5f;
     private float lastAttackTime = -999f;
+    public float attackDamage = 20f;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -25,13 +26,7 @@ public class PlayerController2D : MonoBehaviour
 
     private bool isGrounded;
     private bool facingRight = true;
-    private bool isDead = false;
-
-    [Header("Status")]
-    public PlayerStatus status = new PlayerStatus();
     
-    private Coroutine flashCoroutine;
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -44,8 +39,6 @@ public class PlayerController2D : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return;
-
         float move = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
 
@@ -86,24 +79,32 @@ public class PlayerController2D : MonoBehaviour
         Debug.DrawRay(midFoot, Vector2.down * rayLength, Color.green);
         Debug.DrawRay(rightFoot, Vector2.down * rayLength, Color.blue);
     }
-
+    
     void Attack()
     {
         lastAttackTime = Time.time;
         anim.SetTrigger("Attack");
         Debug.Log("Player Attacked!");
-        
-        float attackRadius = 0.8f;
-        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);
 
-        foreach (Collider2D enemy in hitEnemies)
+        float attackRadius = 0.8f;
+        LayerMask enemyLayer = LayerMask.GetMask("Enemy"); 
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);
+
+        foreach (Collider2D hit in hitColliders)
         {
-            Enemy e = enemy.GetComponent<Enemy>();
+            Enemy e = hit.GetComponent<Enemy>();
             if (e != null)
             {
-                e.TakeDamage(status.attack);
+                e.TakeDamage(attackDamage); 
                 Debug.Log("Hit Enemy: " + e.name);
+                continue;
+            }
+            
+            EnemyDummy dummy = hit.GetComponent<EnemyDummy>();
+            if (dummy != null)
+            {
+                dummy.TakeDamage(attackDamage); 
+                Debug.Log("Hit Dummy: " + dummy.name);
             }
         }
     }
@@ -116,51 +117,6 @@ public class PlayerController2D : MonoBehaviour
         transform.localScale = s;
     }
     
-    private IEnumerator FlashRedMultiple(int times, float interval)
-    {
-        if (sr == null) yield break;
-
-        for (int i = 0; i < times; i++)
-        {
-            sr.color = Color.red;
-            yield return new WaitForSeconds(interval);
-            sr.color = Color.white;
-            yield return new WaitForSeconds(interval);
-        }
-    }
-
-    public void TakeDamage(float amount)
-    {
-        if (isDead) return;
-
-        status.TakeDamage(amount);
-
-        if (status.hp > 0)
-        {
-            anim.SetTrigger("Hurt");
-            Debug.Log($"Player Hurt! HP: {status.hp}");
-            
-            if (flashCoroutine != null)
-            {
-                StopCoroutine(flashCoroutine);
-                flashCoroutine = null;
-            }
-            flashCoroutine = StartCoroutine(FlashRedMultiple(3, 0.08f));
-        }
-        else
-        {
-            Die();
-        }
-    }
-
-    void Die()
-    {
-        isDead = true;
-        anim.SetTrigger("Die");
-        rb.velocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Static;
-        Debug.Log("Player Died!");
-    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
