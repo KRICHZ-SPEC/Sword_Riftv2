@@ -54,7 +54,7 @@ public class Wave1Manager : MonoBehaviour
         yield return new WaitUntil(() => dummyDead == true);
         yield return null;
 
-        yield return tutorialUI.ShowText("Pick up items dropped by enemies", showDuration);
+        yield return tutorialUI.ShowText("Pick up items", showDuration);
         yield return new WaitUntil(() => pickupCollected == true);
         yield return null;
         
