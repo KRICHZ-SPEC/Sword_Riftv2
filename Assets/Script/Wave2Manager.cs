@@ -1,16 +1,19 @@
 using UnityEngine;
-using System.Collections; 
+using System.Collections;
 
 public class Wave2Manager : MonoBehaviour
 {
     public static Wave2Manager Instance;
 
+    [Header("References")]
     public TutorialUI tutorialUI;
-    public GameObject enemyPrefab; 
-    public Transform enemySpawnPoint; 
+    public GameObject enemyPrefab;
+    public Transform enemySpawnPoint;
 
-    private bool skillUsed = false;
+    [Header("Wave State")]
+    private bool tutorialStarted = false;
     private bool enemySpawned = false;
+    private bool waveCompleted = false; 
     private Enemy spawnedEnemy;
 
     void Awake()
@@ -20,26 +23,31 @@ public class Wave2Manager : MonoBehaviour
 
     public void BeginWave2Tutorial()
     {
-        StartCoroutine(tutorialUI.ShowText("Press F to use FireBall Skill", 2f));
+        StartCoroutine(RunWave2Tutorial());
+    }
+
+    IEnumerator RunWave2Tutorial()
+    {
+        yield return StartCoroutine(tutorialUI.ShowText("Wave 2: Skill Practice", 2f));
+        yield return StartCoroutine(tutorialUI.ShowText("Press F to use FireBall Skill", 2f));
+        tutorialStarted = true;
     }
 
     void Update()
     {
-        if (enemySpawned && spawnedEnemy == null)
+        if (enemySpawned && spawnedEnemy == null && !waveCompleted)
         {
-            enemySpawned = false; 
+            waveCompleted = true; 
             StartCoroutine(CompleteWave());
         }
     }
 
     public void OnUseSkill()
     {
-        if (skillUsed) return;
-        skillUsed = true;
+        if (!tutorialStarted || enemySpawned || waveCompleted) return; 
         
-        enemySpawned = true;
+        enemySpawned = true; 
         SpawnEnemy();
-        StartCoroutine(tutorialUI.ShowText("Good! Defeat the enemy!", 2f));
     }
 
     void SpawnEnemy()
@@ -51,6 +59,7 @@ public class Wave2Manager : MonoBehaviour
 
     IEnumerator CompleteWave()
     {
+        yield return tutorialUI.ShowText("Good! Enemy Defeated!", 2f); 
         yield return tutorialUI.ShowText("Wave 2 Complete!", 2f);
         Debug.Log("WAVE 2 DONE");
         
