@@ -12,11 +12,6 @@ public class EnemyDummy : Enemy
         if(rb != null) rb.velocity = Vector2.zero;
     }
     
-    protected override void TryAttack()
-    {
-        
-    }
-    
     void OnDisable()
     {
         if (isDead && pickupPrefab != null)
