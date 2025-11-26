@@ -194,7 +194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FireBall
   speed: 10
   damage: 20
-  lifeTime: 2
+  lifeTime: 4
 --- !u!114 &-4191654147797690369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,4 +208,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireBallProjectile
   damage: 20
-  lifeTime: 3
+  lifeTime: 5

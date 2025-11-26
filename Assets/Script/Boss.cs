@@ -9,9 +9,9 @@ public class Boss : Enemy
 
     //protected override void Update() 
     //{
-        //base.Update();
-        //CheckPhase();
-        //UseSkills();
+    //base.Update();
+    //CheckPhase();
+    //UseSkills();
     //}
 
     void CheckPhase() {
