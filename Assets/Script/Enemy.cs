@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -28,6 +29,8 @@ public class Enemy : MonoBehaviour
     [Header("Hit Flash")]
     public Color hitColor = Color.red;
     public float flashDuration = 0.15f;
+    
+    public static event Action<Enemy> OnEnemyDied;
 
     void Start()
     {
@@ -122,11 +125,16 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
+
         isDead = true;
         anim.SetBool("isDead", true);
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
         GetComponent<Collider2D>().enabled = false;
+        
+        OnEnemyDied?.Invoke(this);
+
         Destroy(gameObject, 2f);
     }
 }

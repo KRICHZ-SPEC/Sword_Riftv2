@@ -5,11 +5,21 @@ public class WaveManager : MonoBehaviour
 {
     [Header("Wave Settings")]
     public List<Waves> waves = new List<Waves>();
-    public Player player;          
+    public Player player;               
     public ActiveSkill fireballSkill; 
     private int currentWave = 0;
     private bool waveActive = false;
     
+    void OnEnable()
+    {
+        Enemy.OnEnemyDied += HandleEnemyDeath;
+    }
+    
+    void OnDisable()
+    {
+        Enemy.OnEnemyDied -= HandleEnemyDeath;
+    }
+
     public void StartWave(int index)
     {
         if (index >= waves.Count) return;
@@ -25,16 +35,26 @@ public class WaveManager : MonoBehaviour
         {
             if (player != null && fireballSkill != null)
             {
-                player.skills.Add(fireballSkill);
+                player.skills.Add(fireballSkill); 
                 Debug.Log("Fireball Skill Unlocked!");
             }
         }
     }
-
-    public void OnEnemyKilled()
+    
+    void HandleEnemyDeath(Enemy enemy)
     {
         if (!waveActive) return;
-
+        
+        if (currentWave < waves.Count)
+        {
+             waves[currentWave].RemoveEnemyFromList(enemy);
+        }
+        
+        CheckWaveStatus();
+    }
+    
+    public void CheckWaveStatus()
+    {
         if (waves[currentWave].IsWaveCleared())
         {
             waveActive = false;
@@ -43,12 +63,17 @@ public class WaveManager : MonoBehaviour
 
             if (currentWave < waves.Count)
             {
-                StartWave(currentWave);
+                Invoke(nameof(StartNextWave), 2f);
             }
             else
             {
                 Debug.Log("All Waves Completed!");
             }
         }
+    }
+
+    void StartNextWave()
+    {
+        StartWave(currentWave);
     }
 }

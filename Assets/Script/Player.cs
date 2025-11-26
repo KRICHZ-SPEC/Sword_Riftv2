@@ -12,10 +12,12 @@ public class Player : MonoBehaviour
     public PlayerStatus status;
     
     [Header("Skill Settings")]
-    public FireBallSkill fireBallSkill;
+    public FireBallSkill fireBallSkillData;
     public Vector2 lastMoveDirection = Vector2.right;
     
     public List<ActiveSkill> skills = new List<ActiveSkill>();
+    
+    private SkillInstance fireBallInstance;
 
     [Header("Linked UI")]
     public HealthBar healthBar;
@@ -46,6 +48,11 @@ public class Player : MonoBehaviour
             healthBar.UpdateBar();
         else
             Debug.LogError("Player ยังไม่ได้เชื่อมต่อกับ HealthBar!");
+        
+        if (fireBallSkillData != null)
+        {
+            fireBallInstance = new SkillInstance(fireBallSkillData);
+        }
     }
 
     void Update()
@@ -63,9 +70,9 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (fireBallSkill != null && fireBallSkill.CanUse())
+            if (fireBallInstance != null && fireBallInstance.CanUse())
             {
-                fireBallSkill.Activate(this);
+                fireBallInstance.Use(this);
                 
                 if (Wave2Manager.Instance != null)
                 {

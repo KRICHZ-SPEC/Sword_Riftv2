@@ -10,6 +10,7 @@ public class FireBall : MonoBehaviour
     public void Setup(Vector2 dir)
     {
         direction = dir.normalized;
+        
         Destroy(gameObject, lifeTime);
         
         if (dir.x < 0)

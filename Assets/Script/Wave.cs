@@ -14,13 +14,28 @@ public class Waves
     {
         aliveEnemies.Clear();
 
-        for (int i = 0; i < enemyPrefabs.Count; i++)
+        if (spawnPoints.Length == 0) 
         {
-            foreach (Transform spawn in spawnPoints)
-            {
-                Enemy e = GameObject.Instantiate(enemyPrefabs[i], spawn.position, Quaternion.identity);
-                aliveEnemies.Add(e);
-            }
+            Debug.LogError("No spawn points defined!");
+            return;
+        }
+        
+        foreach (Enemy prefab in enemyPrefabs)
+        {
+            if (prefab == null) continue;
+            
+            Transform randomPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+            
+            Enemy e = GameObject.Instantiate(prefab, randomPoint.position, Quaternion.identity);
+            aliveEnemies.Add(e);
+        }
+    }
+    
+    public void RemoveEnemyFromList(Enemy enemy)
+    {
+        if (aliveEnemies.Contains(enemy))
+        {
+            aliveEnemies.Remove(enemy);
         }
     }
 
