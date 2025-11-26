@@ -12,10 +12,9 @@ public class Player : MonoBehaviour
     public PlayerStatus status;
     
     [Header("Skill Settings")]
-    public FireBallSkill fireBallSkillData;
-    public Vector2 lastMoveDirection = Vector2.right;
+    public ActiveSkill initialSkill; 
     
-    public List<ActiveSkill> skills = new List<ActiveSkill>();
+    public List<SkillInstance> skillInstances = new List<SkillInstance>();
     
     private SkillInstance fireBallInstance;
 
@@ -25,11 +24,12 @@ public class Player : MonoBehaviour
     [Header("Inventory")]
     public List<Item> inventory = new List<Item>();
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
+
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
     private bool isDead = false;
-    
+    public Vector2 lastMoveDirection = Vector2.right;
 
     void Awake()
     {
@@ -46,12 +46,29 @@ public class Player : MonoBehaviour
         
         if (healthBar != null) 
             healthBar.UpdateBar();
-        else
-            Debug.LogError("Player ยังไม่ได้เชื่อมต่อกับ HealthBar!");
         
-        if (fireBallSkillData != null)
+        if (initialSkill != null)
         {
-            fireBallInstance = new SkillInstance(fireBallSkillData);
+            UnlockSkill(initialSkill);
+        }
+    }
+    
+    public void UnlockSkill(ActiveSkill newSkill)
+    {
+        if (newSkill == null) return;
+        
+        foreach(var s in skillInstances)
+        {
+            if(s.skillAsset == newSkill) return; 
+        }
+        
+        SkillInstance newInstance = new SkillInstance(newSkill);
+        skillInstances.Add(newInstance);
+        
+        if (newSkill is FireBallSkill)
+        {
+            fireBallInstance = newInstance;
+            Debug.Log("Player unlocked Fireball!");
         }
     }
 
@@ -73,11 +90,6 @@ public class Player : MonoBehaviour
             if (fireBallInstance != null && fireBallInstance.CanUse())
             {
                 fireBallInstance.Use(this);
-                
-                if (Wave2Manager.Instance != null)
-                {
-                    Wave2Manager.Instance.OnUseSkill();
-                }
             }
         }
     }
@@ -94,12 +106,7 @@ public class Player : MonoBehaviour
         StartCoroutine(FlashRed());
         anim.SetTrigger("Hurt");
 
-        Debug.Log($"Player hurt! HP = {status.hp}");
-
-        if (status.hp <= 0)
-        {
-            Die();
-        }
+        if (status.hp <= 0) Die();
     }
 
     IEnumerator FlashRed()
@@ -122,8 +129,7 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
         status.Heal(amount);
-        if (healthBar != null)
-            healthBar.UpdateBar();
+        if (healthBar != null) healthBar.UpdateBar();
     }
 
     public void ApplyStatus(StatusEffect effect)

@@ -30,7 +30,27 @@ public class Enemy : MonoBehaviour
     public Color hitColor = Color.red;
     public float flashDuration = 0.15f;
     
-    public static event Action<Enemy> OnEnemyDied;
+    public static event System.Action<Enemy> OnEnemyDied;
+    public void OnObjectSpawn()
+    {
+        isDead = false;
+        hp = maxHp;
+        
+        if(anim != null) 
+        {
+            anim.Rebind(); 
+            anim.Update(0f);
+        }
+        
+        if(rb != null) 
+        {
+            rb.velocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+        
+        GetComponent<Collider2D>().enabled = true;
+        if(sr != null) sr.color = Color.white;
+    }
 
     void Start()
     {
@@ -126,15 +146,20 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         if (isDead) return;
-
         isDead = true;
+        
+        OnEnemyDied?.Invoke(this);
+        
         anim.SetBool("isDead", true);
         rb.velocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
         GetComponent<Collider2D>().enabled = false;
         
-        OnEnemyDied?.Invoke(this);
-
-        Destroy(gameObject, 2f);
+        StartCoroutine(DisableAfterDeathAnim());
+    }
+    IEnumerator DisableAfterDeathAnim()
+    {
+        yield return new WaitForSeconds(2f);
+        gameObject.SetActive(false);       
     }
 }

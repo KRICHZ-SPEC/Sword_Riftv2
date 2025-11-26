@@ -1,26 +1,33 @@
 using UnityEngine;
+using System.Collections;
 
-public class FireBall : MonoBehaviour
+public class FireBall : MonoBehaviour, IPooledObject
 {
     public float speed = 10f;
     public float damage = 20f;
     public float lifeTime = 2f;
     private Vector2 direction;
+    
+    public void OnObjectSpawn()
+    {
+        
+    }
 
     public void Setup(Vector2 dir)
     {
         direction = dir.normalized;
         
-        Destroy(gameObject, lifeTime);
+        if (dir.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+        else transform.localScale = new Vector3(1, 1, 1);
         
-        if (dir.x < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
+        StopAllCoroutines();
+        StartCoroutine(DisableAfterTime());
+    }
+
+    IEnumerator DisableAfterTime()
+    {
+        yield return new WaitForSeconds(lifeTime);
+        gameObject.SetActive(false);
     }
 
     void Update()
@@ -34,12 +41,12 @@ public class FireBall : MonoBehaviour
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
         
         if (collision.CompareTag("Ground"))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

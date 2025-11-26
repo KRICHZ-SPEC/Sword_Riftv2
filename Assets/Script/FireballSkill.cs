@@ -13,23 +13,15 @@ public class FireBallSkill : ActiveSkill
     {
         Vector2 dir = player.lastMoveDirection;
         if (dir == Vector2.zero) dir = Vector2.right;
-
-        GameObject fb = Instantiate(fireBallPrefab, player.transform.position, Quaternion.identity);
-        
+        GameObject fb = ObjectPoolManager.Instance.SpawnFromPool(fireBallPrefab, player.transform.position, Quaternion.identity);
         FireBall fireBallScript = fb.GetComponent<FireBall>();
         if (fireBallScript != null)
         {
             fireBallScript.speed = speed;
             fireBallScript.damage = damage;
-            
             float safeSpeed = (speed > 0) ? speed : 0.001f;
             fireBallScript.lifeTime = range / safeSpeed;
-            
             fireBallScript.Setup(dir);
-        }
-        else
-        {
-            Debug.LogError("FireBall Prefab ไม่มีสคริปต์ FireBall.cs!");
         }
     }
 }

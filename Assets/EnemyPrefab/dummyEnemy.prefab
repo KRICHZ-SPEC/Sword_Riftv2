@@ -155,12 +155,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd952dcc61d137c41a4646e2b3014ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDummy
+  hp: 100
+  damage: 10
+  speed: 2
   maxHp: 100
-  currentHp: 100
-  pickupPrefab: {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
-  pickupSpawnPoint: {fileID: 0}
+  detectRadius: 6
+  attackRange: 1.2
+  attackCooldown: 1
   hitColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.15
+  pickupPrefab: {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
+  pickupSpawnPoint: {fileID: 0}
 --- !u!70 &5524672524512863453
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

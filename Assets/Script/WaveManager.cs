@@ -1,79 +1,155 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class WaveManager : MonoBehaviour
 {
-    [Header("Wave Settings")]
-    public List<Waves> waves = new List<Waves>();
-    public Player player;               
-    public ActiveSkill fireballSkill; 
-    private int currentWave = 0;
-    private bool waveActive = false;
+    public static WaveManager Instance;
+
+    [Header("Wave Configs")]
+    public List<WaveConfig> allWaves; 
+    public Transform[] spawnPoints;
     
-    void OnEnable()
-    {
-        Enemy.OnEnemyDied += HandleEnemyDeath;
-    }
+    [Header("Special Spawns")]
+    public Transform tutorialSpawnPoint;
     
-    void OnDisable()
+    [Header("References")]
+    public Player player;
+    public TutorialUI tutorialUI;
+
+    private int currentWaveIndex = 0;
+    private int enemiesRemaining = 0;
+    private bool isWaveActive = false;
+    
+    private bool tutorialMoved = false;
+    private bool tutorialJumped = false;
+    private bool tutorialAttacked = false;
+    public bool pickupCollected = false; 
+
+    void Awake() { Instance = this; }
+    void OnEnable() { Enemy.OnEnemyDied += HandleEnemyDeath; }
+    void OnDisable() { Enemy.OnEnemyDied -= HandleEnemyDeath; }
+
+    public void StartWave(int index) { StartCoroutine(StartWaveRoutine(index)); }
+    public void OnPickupCollected() { pickupCollected = true; }
+
+    void Start()
     {
-        Enemy.OnEnemyDied -= HandleEnemyDeath;
+        if (allWaves.Count > 0)
+            StartCoroutine(StartWaveRoutine(0));
     }
 
-    public void StartWave(int index)
+    IEnumerator StartWaveRoutine(int index)
     {
-        if (index >= waves.Count) return;
-
-        currentWave = index;
-        waveActive = true;
-
-        Debug.Log("Start Wave " + (index + 1));
-
-        waves[currentWave].SpawnEnemies();
-        
-        if (currentWave == 1) 
+        if (index >= allWaves.Count)
         {
-            if (player != null && fireballSkill != null)
+            if (tutorialUI) yield return StartCoroutine(tutorialUI.ShowText("VICTORY!", 5f));
+            yield break;
+        }
+
+        currentWaveIndex = index;
+        WaveConfig config = allWaves[currentWaveIndex];
+        
+        if (currentWaveIndex == 0)
+        {
+            yield return StartCoroutine(RunBasicTutorial());
+        }
+        else
+        {
+            if (tutorialUI != null && !string.IsNullOrEmpty(config.startMessage))
             {
-                player.skills.Add(fireballSkill); 
-                Debug.Log("Fireball Skill Unlocked!");
+                yield return StartCoroutine(tutorialUI.ShowText(config.startMessage, 3f));
+            }
+        }
+        
+        if (config.skillUnlock != null && player != null)
+        {
+            player.UnlockSkill(config.skillUnlock);
+            if(tutorialUI) StartCoroutine(tutorialUI.ShowText($"Unlocked: {config.skillUnlock.name}!", 2f));
+        }
+
+        SpawnEnemies(config);
+    }
+
+    IEnumerator RunBasicTutorial()
+    {
+        yield return tutorialUI.ShowText("Wave 1: Basic Training", 2f);
+        yield return tutorialUI.ShowText("Press A / D to Move", 2f);
+        tutorialMoved = false;
+        while (!tutorialMoved) { if (Input.GetAxisRaw("Horizontal") != 0) tutorialMoved = true; yield return null; }
+
+        yield return tutorialUI.ShowText("Press SpaceBar to Jump", 2f);
+        tutorialJumped = false;
+        while (!tutorialJumped) { if (Input.GetKeyDown(KeyCode.Space)) tutorialJumped = true; yield return null; }
+
+        yield return tutorialUI.ShowText("Press J to Attack", 2f);
+        tutorialAttacked = false;
+        while (!tutorialAttacked) { if (Input.GetKeyDown(KeyCode.J)) tutorialAttacked = true; yield return null; }
+
+        yield return tutorialUI.ShowText("Destroy the Target!", 2f);
+    }
+    
+    void SpawnEnemies(WaveConfig config)
+    {
+        enemiesRemaining = 0;
+        isWaveActive = true;
+
+        foreach (var info in config.enemiesToSpawn)
+        {
+            for (int i = 0; i < info.count; i++)
+            {
+                Vector3 spawnPos;
+                
+                if (currentWaveIndex == 0 && tutorialSpawnPoint != null)
+                {
+                    spawnPos = tutorialSpawnPoint.position;
+                }
+                else
+                {
+                    Transform randomPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                    spawnPos = randomPoint.position;
+                }
+                
+                ObjectPoolManager.Instance.SpawnFromPool(
+                    info.enemyPrefab.gameObject, 
+                    spawnPos, 
+                    Quaternion.identity
+                );
+                
+                enemiesRemaining++;
             }
         }
     }
-    
+
     void HandleEnemyDeath(Enemy enemy)
     {
-        if (!waveActive) return;
-        
-        if (currentWave < waves.Count)
-        {
-             waves[currentWave].RemoveEnemyFromList(enemy);
-        }
-        
-        CheckWaveStatus();
-    }
-    
-    public void CheckWaveStatus()
-    {
-        if (waves[currentWave].IsWaveCleared())
-        {
-            waveActive = false;
-            Debug.Log("Wave " + (currentWave + 1) + " Cleared!");
-            currentWave++;
+        if (!isWaveActive) return;
+        enemiesRemaining--;
 
-            if (currentWave < waves.Count)
-            {
-                Invoke(nameof(StartNextWave), 2f);
-            }
-            else
-            {
-                Debug.Log("All Waves Completed!");
-            }
+        if (enemiesRemaining <= 0)
+        {
+            if (currentWaveIndex == 0) StartCoroutine(WaitForPickup());
+            else EndWave();
         }
     }
 
-    void StartNextWave()
+    IEnumerator WaitForPickup()
     {
-        StartWave(currentWave);
+        yield return tutorialUI.ShowText("Pick up the Item!", 2f);
+        pickupCollected = false;
+        yield return new WaitUntil(() => pickupCollected);
+        EndWave();
+    }
+
+    void EndWave()
+    {
+        isWaveActive = false;
+        if (tutorialUI) StartCoroutine(tutorialUI.ShowText("Wave Cleared!", 2f));
+        Invoke(nameof(NextWave), 3f);
+    }
+
+    void NextWave()
+    {
+        StartCoroutine(StartWaveRoutine(currentWaveIndex + 1));
     }
 }

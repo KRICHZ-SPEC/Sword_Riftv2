@@ -3,7 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class SkillInstance
 {
-    public ActiveSkill skillAsset;
+    public ActiveSkill skillAsset; 
     private float lastUsedTime = -999f;
 
     public SkillInstance(ActiveSkill asset)
@@ -13,6 +13,7 @@ public class SkillInstance
 
     public bool CanUse()
     {
+        if (skillAsset == null) return false;
         return Time.time >= lastUsedTime + skillAsset.cooldown;
     }
 

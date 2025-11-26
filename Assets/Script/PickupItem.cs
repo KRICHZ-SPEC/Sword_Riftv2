@@ -6,8 +6,22 @@ public class PickupItem : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            Wave1Manager.Instance.OnPickupCollected();
-            Destroy(gameObject);
+            Debug.Log("Pickup touched Player");
+            
+            if (WaveManager.Instance != null)
+            {
+                WaveManager.Instance.OnPickupCollected();
+            }
+            
+            Item item = GetComponent<Item>();
+            if (item != null)
+            {
+                item.OnPickup(col.GetComponent<Player>());
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
