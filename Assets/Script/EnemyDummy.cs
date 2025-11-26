@@ -8,7 +8,6 @@ public class EnemyDummy : Enemy
     
     protected override void PatrolOrChase()
     {
-        // บังคับให้หยุดเดิน
         if(anim != null) anim.SetBool("isWalking", false);
         if(rb != null) rb.velocity = Vector2.zero;
     }

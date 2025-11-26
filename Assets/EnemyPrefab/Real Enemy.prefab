@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 881479411402349394}
   - component: {fileID: 718311445888824856}
   - component: {fileID: 1981749860323205462}
-  - component: {fileID: 1019262897352475319}
   - component: {fileID: 2948425727175934167}
   - component: {fileID: 8789288820225535624}
+  - component: {fileID: 3882603629965007103}
   m_Layer: 6
   m_Name: Real Enemy
   m_TagString: Player
@@ -144,31 +144,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 5
---- !u!114 &1019262897352475319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3237470933422773578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7eb077e2051ce348a543d8cf2966e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  enemyID: 0
-  type: 
-  hp: 60
-  damage: 10
-  speed: 2
-  maxHp: 60
-  detectRadius: 6
-  attackRange: 1.5
-  attackCooldown: 2
-  dropTable:
-  - {fileID: 0}
-  hitColor: {r: 1, g: 0, b: 0, a: 1}
-  flashDuration: 0.15
 --- !u!114 &2948425727175934167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,3 +194,24 @@ CapsuleCollider2D:
   m_Offset: {x: -0.026174545, y: -0.5290158}
   m_Size: {x: 1.1308327, y: 1.5009618}
   m_Direction: 0
+--- !u!114 &3882603629965007103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3237470933422773578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eb077e2051ce348a543d8cf2966e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  hp: 50
+  damage: 10
+  speed: 2
+  maxHp: 50
+  detectRadius: 6
+  attackRange: 1.2
+  attackCooldown: 1
+  hitColor: {r: 1, g: 0, b: 0, a: 1}
+  flashDuration: 0.15
