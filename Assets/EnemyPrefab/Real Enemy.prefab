@@ -206,12 +206,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7eb077e2051ce348a543d8cf2966e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  hp: 50
+  maxHp: 50
   damage: 10
   speed: 2
-  maxHp: 50
   detectRadius: 6
   attackRange: 1.2
   attackCooldown: 1
-  hitColor: {r: 1, g: 0, b: 0, a: 1}
-  flashDuration: 0.15
+  dropChance: 0.3
+  lootDrops:
+  - {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}

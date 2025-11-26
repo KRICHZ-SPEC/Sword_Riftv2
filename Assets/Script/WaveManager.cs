@@ -86,7 +86,7 @@ public class WaveManager : MonoBehaviour
         tutorialAttacked = false;
         while (!tutorialAttacked) { if (Input.GetKeyDown(KeyCode.J)) tutorialAttacked = true; yield return null; }
 
-        yield return tutorialUI.ShowText("Destroy the Target!", 2f);
+        yield return tutorialUI.ShowText("Destroy the Dummy!", 2f);
     }
     
     void SpawnEnemies(WaveConfig config)

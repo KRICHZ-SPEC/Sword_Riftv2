@@ -127,7 +127,7 @@ public class Enemy : MonoBehaviour, IPooledObject
     
     protected void TryDropLoot()
     {
-        if (UnityEngine.Random.value > dropChance) return; // ถ้าดวงไม่ดีก็จบเลย ไม่ดรอป
+        if (UnityEngine.Random.value > dropChance) return;
         if (lootDrops == null || lootDrops.Count == 0) return;
         GameObject itemToDrop = lootDrops[UnityEngine.Random.Range(0, lootDrops.Count)];
         if (itemToDrop != null)
