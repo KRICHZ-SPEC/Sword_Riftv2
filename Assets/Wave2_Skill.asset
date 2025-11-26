@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Wave2_Skill
   m_EditorClassIdentifier: Assembly-CSharp::WaveConfig
   waveName: '"Skill Test"'
-  startMessage: '"Wave 2: Fireball Unlocked!"'
+  startMessage: 'Wave 2: Fireball Unlocked! | Press F to Fireball!'
   enemiesToSpawn:
-  - enemyPrefab: {fileID: 1019262897352475319, guid: a33e8cdad6d7886408a37eaebc4de1c3, type: 3}
+  - enemyPrefab: {fileID: 3882603629965007103, guid: a33e8cdad6d7886408a37eaebc4de1c3, type: 3}
     count: 3
   skillUnlock: {fileID: 11400000, guid: f4b5741bb2bb3e442866313126f5f946, type: 2}

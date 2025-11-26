@@ -50,6 +50,11 @@ public class WaveManager : MonoBehaviour
         currentWaveIndex = index;
         WaveConfig config = allWaves[currentWaveIndex];
         
+        if (config.skillUnlock != null && player != null)
+        {
+            player.UnlockSkill(config.skillUnlock);
+        }
+        
         if (currentWaveIndex == 0)
         {
             yield return StartCoroutine(RunBasicTutorial());
@@ -58,14 +63,16 @@ public class WaveManager : MonoBehaviour
         {
             if (tutorialUI != null && !string.IsNullOrEmpty(config.startMessage))
             {
-                yield return StartCoroutine(tutorialUI.ShowText(config.startMessage, 3f));
+                string[] messages = config.startMessage.Split('|'); 
+                
+                foreach (string msg in messages)
+                {
+                    if (!string.IsNullOrWhiteSpace(msg))
+                    {
+                        yield return StartCoroutine(tutorialUI.ShowText(msg.Trim(), 2.5f));
+                    }
+                }
             }
-        }
-        
-        if (config.skillUnlock != null && player != null)
-        {
-            player.UnlockSkill(config.skillUnlock);
-            if(tutorialUI) StartCoroutine(tutorialUI.ShowText($"Unlocked: {config.skillUnlock.name}!", 2f));
         }
 
         SpawnEnemies(config);
