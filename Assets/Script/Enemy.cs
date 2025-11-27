@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour, IPooledObject
         if(rb != null) rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
-    public void OnObjectSpawn()
+    public virtual void OnObjectSpawn()
     {
         isDead = false;
         hp = maxHp;

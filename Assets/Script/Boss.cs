@@ -12,7 +12,7 @@ public class Boss : Enemy
     public GameObject fireBallPrefab;       
     public Transform castPoint;             
     public float chargeSpeed = 12f;         
-    public float chargeDuration = 0.5f;     
+    public float chargeDuration = 0.5f;
 
     [Header("Combat Config (Cooldowns)")]
     public float skillGlobalCooldown = 1.5f; 
@@ -34,8 +34,16 @@ public class Boss : Enemy
     
     protected override void Start()
     {
-        base.Start();
+        OnObjectSpawn();
         if (castPoint == null) castPoint = transform;
+    }
+    public override void OnObjectSpawn()
+    {
+        base.OnObjectSpawn();
+        phase = 1;
+        isUsingSkill = false;
+        isCharging = false;
+        if(sr != null) sr.color = Color.white; 
     }
 
     protected override void Update() 
@@ -83,44 +91,51 @@ public class Boss : Enemy
             return;
         }
         
-        if (dist > attackRange && dist <= 12f)
+        if (dist <= 12f) 
         {
-            if (Time.time >= nextFireBallTime)
+            anim.SetBool("isWalking", false);
+            if (dist <= attackRange * 3f)
             {
-                StartCoroutine(PerformFireBall());
+                int rand = Random.Range(0, 100); 
+                if (rand < 30 && Time.time >= nextHeavyAttackTime && dist <= attackRange * 1.5f)
+                {
+                    StartCoroutine(PerformHeavyAttack());
+                }
+                else if (rand >= 30 && rand < 55 && Time.time >= nextChargeAttackTime)
+                {
+                    StartCoroutine(PerformChargeAttack());
+                }
+                else if (rand >= 55 && rand < 80 && Time.time >= nextFireBallTime)
+                {
+                    StartCoroutine(PerformFireBall());
+                }
+                else if (Time.time - lastAttackTime >= attackCooldown && dist <= attackRange)
+                {
+                    PerformNormalAttack();
+                }
+                else
+                {
+                    MoveTowardsPlayer(); 
+                }
                 return;
             }
-        }
-        
-        if (dist <= attackRange * 2.5f) 
-        {
-            anim.SetBool("isWalking", false); 
-
-            int rand = Random.Range(0, 100); 
-            
-            if (rand < 30 && Time.time >= nextHeavyAttackTime && dist <= attackRange)
+            else 
             {
-                StartCoroutine(PerformHeavyAttack());
+                if (Time.time >= nextFireBallTime)
+                {
+                    StartCoroutine(PerformFireBall());
+                }
+                else
+                {
+                    MoveTowardsPlayer();
+                }
+                return;
             }
-            
-            else if (rand < 60 && Time.time >= nextChargeAttackTime)
-            {
-                StartCoroutine(PerformChargeAttack());
-            }
-            
-            else if (Time.time - lastAttackTime >= attackCooldown && dist <= attackRange)
-            {
-                PerformNormalAttack();
-            }
-            else
-            {
-                MoveTowardsPlayer(); 
-            }
-            return;
         }
 
         MoveTowardsPlayer();
     }
+    
 
     void MoveTowardsPlayer()
     {
@@ -195,20 +210,29 @@ public class Boss : Enemy
 
     IEnumerator PerformFireBall()
     {
-        Debug.Log("1. Boss กำลังจะยิง (เข้าเงื่อนไขแล้ว)");
+        Debug.Log("Boss: Cast Fireball!");
         isUsingSkill = true;
+        anim.SetBool("isWalking", false);
+        rb.velocity = Vector2.zero;
+        
         anim.SetTrigger("CastFireball"); 
 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.5f);
 
         if (fireBallPrefab != null)
         {
-            Debug.Log("2. สร้างลูกไฟแล้ว!");
-            GameObject fb = Instantiate(fireBallPrefab, castPoint.position, Quaternion.identity);
+            GameObject fireball = Instantiate(fireBallPrefab, castPoint.position, Quaternion.identity);
+            float direction = facingRight ? 1f : -1f;
+            Vector2 launchVelocity = new Vector2(direction * 15f, 0); 
+            BossProjectile projectileScript = fireball.GetComponent<BossProjectile>();
+            if (projectileScript != null)
+            {
+                projectileScript.Setup(launchVelocity);
+            }
         }
         else
         {
-            Debug.LogError("ยังไม่ได้ใส่ FireBall Prefab ใน Inspector!!!");
+            Debug.LogError("Boss ไม่มี FireBall Prefab!");
         }
 
         nextFireBallTime = Time.time + fireBallCooldown;
