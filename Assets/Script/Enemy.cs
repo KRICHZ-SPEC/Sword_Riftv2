@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour, IPooledObject
         if (player != null) playerTransform = player.transform;
     }
 
-    void Start()
+    protected virtual void Start()
     {
         OnObjectSpawn();
     }
