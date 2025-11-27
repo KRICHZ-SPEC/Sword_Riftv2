@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour, IPooledObject
     protected SpriteRenderer sr;
     protected float lastAttackTime;
     protected bool isDead = false;
+    
+    protected bool facingRight = true; 
 
     public static event Action<Enemy> OnEnemyDied;
 
@@ -46,6 +48,14 @@ public class Enemy : MonoBehaviour, IPooledObject
         if(rb != null) { rb.velocity = Vector2.zero; rb.bodyType = RigidbodyType2D.Dynamic; }
         GetComponent<Collider2D>().enabled = true;
         if(sr != null) sr.color = Color.white;
+        
+        facingRight = true;
+        if(transform.localScale.x < 0) 
+        {
+            Vector3 s = transform.localScale;
+            s.x = Mathf.Abs(s.x);
+            transform.localScale = s;
+        }
 
         var player = GameObject.FindWithTag("Player");
         if (player != null) playerTransform = player.transform;
@@ -56,7 +66,7 @@ public class Enemy : MonoBehaviour, IPooledObject
         OnObjectSpawn();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (isDead) return;
         if (playerTransform != null) PatrolOrChase();
@@ -67,6 +77,8 @@ public class Enemy : MonoBehaviour, IPooledObject
         float dist = Vector2.Distance(transform.position, playerTransform.position);
         if (dist <= detectRadius)
         {
+            LookAtPlayer(); 
+
             if (dist > attackRange)
             {
                 anim.SetBool("isWalking", true); 
@@ -87,6 +99,29 @@ public class Enemy : MonoBehaviour, IPooledObject
             }
         }
         else anim.SetBool("isWalking", false);
+    }
+    
+    public void LookAtPlayer()
+    {
+        if (playerTransform == null) return;
+        
+        if (playerTransform.position.x < transform.position.x && !facingRight)
+        {
+            Flip();
+        }
+        
+        else if (playerTransform.position.x > transform.position.x && facingRight)
+        {
+            Flip();
+        }
+    }
+    
+    protected void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
     
     void EndAttack() => anim.SetBool("isAttacking", false);

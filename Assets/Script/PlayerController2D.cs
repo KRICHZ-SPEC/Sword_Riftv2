@@ -19,6 +19,8 @@ public class PlayerController2D : MonoBehaviour
     public float attackCooldown = 0.5f;
     private float lastAttackTime = -999f;
     public float attackDamage = 20f;
+    public Transform attackPoint;
+    public float attackRange = 0.8f;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -34,7 +36,7 @@ public class PlayerController2D : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
 
         if (sr == null)
-            Debug.LogError("SpriteRenderer not found on Player — add one or require it in the inspector.");
+            Debug.LogError("SpriteRenderer not found on Player");
     }
 
     void Update()
@@ -44,25 +46,25 @@ public class PlayerController2D : MonoBehaviour
 
         if (move > 0 && !facingRight) Flip();
         else if (move < 0 && facingRight) Flip();
-
+        
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             anim.SetTrigger("Jump");
         }
-
+        
         if (Input.GetKeyDown(KeyCode.J) && Time.time - lastAttackTime >= attackCooldown)
         {
             Attack();
         }
-
+        
         anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         anim.SetBool("isGrounded", isGrounded);
     }
 
     void FixedUpdate()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        bool circleCheck = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
         float rayLength = 0.3f;
         Vector2 leftFoot = groundCheck.position + new Vector3(-0.15f, 0f);
@@ -73,11 +75,7 @@ public class PlayerController2D : MonoBehaviour
         bool hitMid = Physics2D.Raycast(midFoot, Vector2.down, rayLength, groundLayer);
         bool hitRight = Physics2D.Raycast(rightFoot, Vector2.down, rayLength, groundLayer);
 
-        isGrounded = hitLeft || hitMid || hitRight;
-
-        Debug.DrawRay(leftFoot, Vector2.down * rayLength, Color.red);
-        Debug.DrawRay(midFoot, Vector2.down * rayLength, Color.green);
-        Debug.DrawRay(rightFoot, Vector2.down * rayLength, Color.blue);
+        isGrounded = circleCheck || hitLeft || hitMid || hitRight;
     }
     
     void Attack()
@@ -85,10 +83,11 @@ public class PlayerController2D : MonoBehaviour
         lastAttackTime = Time.time;
         anim.SetTrigger("Attack");
         Debug.Log("Player Attacked!");
-
-        float attackRadius = 0.8f;
+        
+        Vector3 origin = attackPoint != null ? attackPoint.position : transform.position;
+        
         LayerMask enemyLayer = LayerMask.GetMask("Enemy"); 
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, attackRadius, enemyLayer);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(origin, attackRange, enemyLayer);
 
         foreach (Collider2D hit in hitColliders)
         {
@@ -119,7 +118,15 @@ public class PlayerController2D : MonoBehaviour
     
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 0.8f);
+        if (attackPoint != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+        }
     }
 }

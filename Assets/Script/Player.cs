@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
     
     [Header("Skill Settings")]
     public ActiveSkill initialSkill; 
-    
     public List<SkillInstance> skillInstances = new List<SkillInstance>();
     
     private SkillInstance fireBallInstance;
@@ -21,7 +20,7 @@ public class Player : MonoBehaviour
     [Header("Linked UI")]
     public HealthBar healthBar;
 
-    [Header("Inventory")]
+    [Header("Inventory & Status")]
     public List<Item> inventory = new List<Item>();
     public List<StatusEffect> activeEffects = new List<StatusEffect>();
 
@@ -90,6 +89,17 @@ public class Player : MonoBehaviour
             if (fireBallInstance != null && fireBallInstance.CanUse())
             {
                 fireBallInstance.Use(this);
+            }
+        }
+        
+        for (int i = 0; i < skillInstances.Count; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                if (skillInstances[i].CanUse())
+                {
+                    skillInstances[i].Use(this);
+                }
             }
         }
     }

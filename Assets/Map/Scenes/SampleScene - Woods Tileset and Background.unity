@@ -1418,7 +1418,6 @@ GameObject:
   - component: {fileID: 113796230}
   - component: {fileID: 113796231}
   - component: {fileID: 113796234}
-  - component: {fileID: 113796235}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1571,6 +1570,8 @@ MonoBehaviour:
     m_Bits: 1
   attackCooldown: 0.25
   attackDamage: 20
+  attackPoint: {fileID: 1838958294}
+  attackRange: 1.2
 --- !u!114 &113796230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1655,25 +1656,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.0022462606, y: -0.38964975}
   m_Size: {x: 1.1169782, y: 1.8198092}
   m_Direction: 0
---- !u!114 &113796235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 113796222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fd17fb876a66e84bb4357f91020e73d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  attackRange: 1.2
-  attackDamage: 20
-  attackCooldown: 0.5
-  attackPoint: {fileID: 1838958294}
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 65
 --- !u!1 &138585619
 GameObject:
   m_ObjectHideFlags: 0
