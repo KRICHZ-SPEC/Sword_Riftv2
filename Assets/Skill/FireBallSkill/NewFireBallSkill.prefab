@@ -192,9 +192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faaed4c85aa3b89438654a36420c3be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireBall
-  speed: 10
-  damage: 20
-  lifeTime: 4
+  speed: 20
+  damage: 30
+  lifeTime: 5
 --- !u!114 &-4191654147797690369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,5 +207,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c55b8cf78f3d840bae2d5ff157ec7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireBallProjectile
-  damage: 20
-  lifeTime: 5
+  damage: 30
+  lifeTime: 6

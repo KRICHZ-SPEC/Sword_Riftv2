@@ -9,6 +9,7 @@ public class PlayerController2D : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpForce = 8f;
+    public bool canMove = true;
 
     [Header("Ground Check")]
     public Transform groundCheck;
@@ -21,6 +22,7 @@ public class PlayerController2D : MonoBehaviour
     public float attackDamage = 20f;
     public Transform attackPoint;
     public float attackRange = 0.8f;
+    public LayerMask enemyLayer;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -43,9 +45,9 @@ public class PlayerController2D : MonoBehaviour
 
     void Update()
     {
-        if (playerStats != null && playerStats.status.hp <= 0)
+        if ((playerStats != null && playerStats.status.hp <= 0) || !canMove)
         {
-            rb.velocity = Vector2.zero;
+            if (playerStats.status.hp <= 0) rb.velocity = Vector2.zero; 
             return; 
         }
 
@@ -82,7 +84,6 @@ public class PlayerController2D : MonoBehaviour
         
         Vector3 origin = attackPoint != null ? attackPoint.position : transform.position;
         
-        LayerMask enemyLayer = LayerMask.GetMask("Enemy"); 
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(origin, attackRange, enemyLayer);
 
         foreach (Collider2D hit in hitColliders)
@@ -99,7 +100,6 @@ public class PlayerController2D : MonoBehaviour
             if (dummy != null)
             {
                 dummy.TakeDamage(attackDamage); 
-                Debug.Log("Hit Dummy: " + dummy.name);
             }
         }
     }
@@ -110,6 +110,13 @@ public class PlayerController2D : MonoBehaviour
         Vector3 s = transform.localScale;
         s.x *= -1;
         transform.localScale = s;
+    }
+    
+    public IEnumerator DisableMovement(float time)
+    {
+        canMove = false;
+        yield return new WaitForSeconds(time);
+        canMove = true;
     }
     
     private void OnDrawGizmosSelected()

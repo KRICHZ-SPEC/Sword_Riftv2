@@ -1563,15 +1563,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController2D
   moveSpeed: 5
   jumpForce: 8
+  canMove: 1
   groundCheck: {fileID: 807045035}
   groundCheckRadius: 0.25
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8
   attackCooldown: 0.25
   attackDamage: 20
   attackPoint: {fileID: 1838958294}
   attackRange: 1.2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &113796230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1609,7 +1613,8 @@ MonoBehaviour:
     maxHp: 100
     maxMp: 100
   initialSkill: {fileID: 0}
-  skillInstances: []
+  skillInstances:
+  - skillAsset: {fileID: 11400000, guid: f4b5741bb2bb3e442866313126f5f946, type: 2}
   healthBar: {fileID: 1100149345}
   inventory: []
   activeEffects:
@@ -2351,37 +2356,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &206238807
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 206238808}
-  m_Layer: 0
-  m_Name: AttackPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &206238808
+--- !u!4 &206238808 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 5119663084802472226, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
+  m_PrefabInstance: {fileID: 369997653}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 206238807}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.65, y: -0.29, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 287634740}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &210380337
 GameObject:
   m_ObjectHideFlags: 0
@@ -3509,11 +3488,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &287634740 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8651872689084460587, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-  m_PrefabInstance: {fileID: 369997653}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &296371965
 GameObject:
   m_ObjectHideFlags: 0
@@ -4424,7 +4398,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1472725948141003159, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.36
+      value: -0.57
       objectReference: {fileID: 0}
     - target: {fileID: 1472725948141003159, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4446,9 +4420,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss
       objectReference: {fileID: 0}
-    - target: {fileID: 8358669922303491664, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-      propertyPath: m_FlipX
-      value: 1
+    - target: {fileID: 7796767442575763418, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8651872689084460587, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4492,10 +4466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8651872689084460587, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 206238808}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
 --- !u!1 &379076582
@@ -9595,9 +9566,9 @@ GameObject:
   - component: {fileID: 807045037}
   - component: {fileID: 807045036}
   - component: {fileID: 807045038}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14526,9 +14497,9 @@ GameObject:
   - component: {fileID: 1274604174}
   - component: {fileID: 1274604173}
   - component: {fileID: 1274604175}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21382,9 +21353,9 @@ GameObject:
   - component: {fileID: 1829706156}
   - component: {fileID: 1829706155}
   - component: {fileID: 1829706154}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tilemap
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

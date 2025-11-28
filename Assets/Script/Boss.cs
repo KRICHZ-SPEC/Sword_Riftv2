@@ -57,7 +57,7 @@ public class Boss : Enemy
     {
         if (isDead) 
         {
-            currentMovementInput = Vector2.zero;
+            rb.velocity = Vector2.zero;
             return;
         }
         
@@ -88,7 +88,6 @@ public class Boss : Enemy
             base.FixedUpdate();
         }
     }
-
     void CheckPhase() 
     {
         if (maxHp <= 0) return;
@@ -247,12 +246,12 @@ public class Boss : Enemy
             BossProjectile projectileScript = fireball.GetComponent<BossProjectile>();
             if (projectileScript != null)
             {
-                projectileScript.Setup(launchVelocity, damage);
+                projectileScript.Setup(launchVelocity, damage, GetComponent<Collider2D>());
             }
         }
         else
         {
-            Debug.LogError("Boss ไม่มี FireBall Prefab! ลาก Prefab มาใส่ใน Inspector ด้วย");
+            Debug.LogError("Boss ไม่มี FireBall Prefab!");
         }
 
         nextFireBallTime = Time.time + fireBallCooldown;
@@ -271,7 +270,9 @@ public class Boss : Enemy
                 if(playerRb)
                 {
                     Vector2 knockDir = (p.transform.position - transform.position).normalized;
-                    playerRb.AddForce(knockDir * 300f);
+                    playerRb.AddForce(knockDir * 15f, ForceMode2D.Impulse);
+                    PlayerController2D pc = p.GetComponent<PlayerController2D>();
+                    if (pc != null) StartCoroutine(pc.DisableMovement(0.3f));
                 }
             }
             isCharging = false; 
@@ -300,5 +301,9 @@ public class Boss : Enemy
         if (attackPoint == null) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
+    }
+    void OnDisable()
+    {
+        StopAllCoroutines();
     }
 }

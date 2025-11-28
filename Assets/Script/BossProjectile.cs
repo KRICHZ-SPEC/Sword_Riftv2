@@ -12,25 +12,35 @@ public class BossProjectile : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
         Collider2D col = GetComponent<Collider2D>();
-        col.isTrigger = true;
-        int projLayer = LayerMask.NameToLayer("Projectile");
-        int enemyLayer = LayerMask.NameToLayer("Enemy");
-        if (projLayer >= 0 && enemyLayer >= 0)
-            Physics2D.IgnoreLayerCollision(projLayer, enemyLayer, true);
+        col.isTrigger = true; 
     }
-
-    public void Setup(Vector2 velocity, float dmg)
+    
+    public void Setup(Vector2 velocity, float dmg, Collider2D ownerCollider)
     {
         damage = dmg;
         rb.velocity = velocity;
         rb.gravityScale = 0f;
+        
+        Collider2D[] ownerColliders = ownerCollider.GetComponentsInParent<Collider2D>();
+        Collider2D myCollider = GetComponent<Collider2D>();
+
+        foreach (var col in ownerColliders)
+        {
+            if (col != null && myCollider != null)
+                Physics2D.IgnoreCollision(myCollider, col);
+        }
+
         Destroy(gameObject, lifeTime);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("Enemy") || collision.CompareTag("Boss")) 
+        {
+            return; 
+        }
+
         if (collision.CompareTag("Player"))
         {
             Player p = collision.GetComponent<Player>();
@@ -39,10 +49,13 @@ public class BossProjectile : MonoBehaviour
 
             DestroyProjectile();
         }
-        
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        else 
         {
-            DestroyProjectile();
+            int groundLayer = LayerMask.NameToLayer("Ground");
+            if (groundLayer != -1 && collision.gameObject.layer == groundLayer)
+            {
+                DestroyProjectile();
+            }
         }
     }
 
