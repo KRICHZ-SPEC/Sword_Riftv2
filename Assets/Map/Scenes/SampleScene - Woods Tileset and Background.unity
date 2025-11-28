@@ -2356,11 +2356,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &206238808 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5119663084802472226, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-  m_PrefabInstance: {fileID: 369997653}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &210380337
 GameObject:
   m_ObjectHideFlags: 0
@@ -4399,22 +4394,6 @@ PrefabInstance:
     - target: {fileID: 1472725948141003159, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 1472725948141003159, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2412056541547443300, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-      propertyPath: attackPoint
-      value: 
-      objectReference: {fileID: 206238808}
-    - target: {fileID: 2412056541547443300, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-      propertyPath: attackRange
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2412056541547443300, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
-      propertyPath: playerLayer.m_Bits
-      value: 129
       objectReference: {fileID: 0}
     - target: {fileID: 7796767442575763418, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
       propertyPath: m_Name
