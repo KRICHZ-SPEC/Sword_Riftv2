@@ -1,37 +1,46 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Collider2D))]
 public class BossProjectile : MonoBehaviour
 {
-    public float damage = 15f;
-    public float lifeTime = 3f;
+    private float damage = 10f;
+    private Rigidbody2D rb;
     public GameObject hitEffect;
-    
-    private Rigidbody2D rb; 
+    public float lifeTime = 5f;
 
-    void Start()
+    void Awake()
     {
-        rb = GetComponent<Rigidbody2D>(); 
+        rb = GetComponent<Rigidbody2D>();
+
+        Collider2D col = GetComponent<Collider2D>();
+        col.isTrigger = true;
+        int projLayer = LayerMask.NameToLayer("Projectile");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        if (projLayer >= 0 && enemyLayer >= 0)
+            Physics2D.IgnoreLayerCollision(projLayer, enemyLayer, true);
+    }
+
+    public void Setup(Vector2 velocity, float dmg)
+    {
+        damage = dmg;
+        rb.velocity = velocity;
+        rb.gravityScale = 0f;
         Destroy(gameObject, lifeTime);
     }
-    
-    public void Setup(Vector2 velocity)
-    {
-        if (rb == null) rb = GetComponent<Rigidbody2D>();
-        rb.velocity = velocity; 
-    }
 
-    void OnTriggerEnter2D(Collider2D hitInfo)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (hitInfo.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            Player player = hitInfo.GetComponent<Player>();
-            if (player != null)
-            {
-                player.TakeDamage(damage);
-            }
+            Player p = collision.GetComponent<Player>();
+            if (p != null)
+                p.TakeDamage(damage);
+
             DestroyProjectile();
         }
-        else if (hitInfo.CompareTag("Ground"))
+        
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             DestroyProjectile();
         }
@@ -40,9 +49,8 @@ public class BossProjectile : MonoBehaviour
     void DestroyProjectile()
     {
         if (hitEffect != null)
-        {
             Instantiate(hitEffect, transform.position, Quaternion.identity);
-        }
+
         Destroy(gameObject);
     }
 }

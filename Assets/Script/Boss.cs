@@ -14,6 +14,11 @@ public class Boss : Enemy
     public float chargeSpeed = 12f;         
     public float chargeDuration = 0.5f;
 
+    [Header("Attack Settings (Hitbox)")]
+    public Transform attackPoint;           
+    public float attackRadius = 1.5f;       
+    public LayerMask playerLayer;          
+
     [Header("Combat Config (Cooldowns)")]
     public float skillGlobalCooldown = 1.5f; 
     public float heavyAttackCooldown = 6f;
@@ -34,9 +39,11 @@ public class Boss : Enemy
     
     protected override void Start()
     {
-        OnObjectSpawn();
+        base.Start();
         if (castPoint == null) castPoint = transform;
+        if (attackPoint == null) attackPoint = transform;
     }
+
     public override void OnObjectSpawn()
     {
         base.OnObjectSpawn();
@@ -48,18 +55,37 @@ public class Boss : Enemy
 
     protected override void Update() 
     {
-        if (isDead || (isUsingSkill && !isCharging)) return;
+        if (isDead) 
+        {
+            currentMovementInput = Vector2.zero;
+            return;
+        }
+        
+        if (isUsingSkill && !isCharging) 
+        {
+            currentMovementInput = Vector2.zero;
+            return;
+        }
+
         CheckPhase();
         
         if (playerTransform != null)
         {
             BossAI();
         }
-        
+    }
+
+    protected override void FixedUpdate()
+    {
+        if (isDead) return;
         if (isCharging)
         {
             float moveDir = facingRight ? -1f : 1f; 
             rb.velocity = new Vector2(moveDir * chargeSpeed, rb.velocity.y);
+        }
+        else
+        {
+            base.FixedUpdate();
         }
     }
 
@@ -81,9 +107,7 @@ public class Boss : Enemy
     void BossAI()
     {
         if (isCharging) return;
-
         float dist = Vector2.Distance(transform.position, playerTransform.position);
-        
         LookAtPlayer();
         if (Time.time < globalSkillReadyTime)
         {
@@ -94,145 +118,141 @@ public class Boss : Enemy
         if (dist <= 12f) 
         {
             anim.SetBool("isWalking", false);
-            if (dist <= attackRange * 3f)
+            bool canHeavy = (Time.time >= nextHeavyAttackTime && dist <= attackRange * 1.5f);
+            bool canCharge = (Time.time >= nextChargeAttackTime && dist <= attackRange * 3f);
+            bool canFireball = (Time.time >= nextFireBallTime);
+            int rand = Random.Range(0, 100);
+            if (canHeavy && rand < 40) 
             {
-                int rand = Random.Range(0, 100); 
-                if (rand < 30 && Time.time >= nextHeavyAttackTime && dist <= attackRange * 1.5f)
-                {
-                    StartCoroutine(PerformHeavyAttack());
-                }
-                else if (rand >= 30 && rand < 55 && Time.time >= nextChargeAttackTime)
-                {
-                    StartCoroutine(PerformChargeAttack());
-                }
-                else if (rand >= 55 && rand < 80 && Time.time >= nextFireBallTime)
-                {
-                    StartCoroutine(PerformFireBall());
-                }
-                else if (Time.time - lastAttackTime >= attackCooldown && dist <= attackRange)
-                {
-                    PerformNormalAttack();
-                }
-                else
-                {
-                    MoveTowardsPlayer(); 
-                }
-                return;
+                StartCoroutine(PerformHeavyAttack());
             }
-            else 
+            else if (canCharge && rand < 70) 
             {
-                if (Time.time >= nextFireBallTime)
-                {
-                    StartCoroutine(PerformFireBall());
-                }
-                else
-                {
-                    MoveTowardsPlayer();
-                }
-                return;
+                StartCoroutine(PerformChargeAttack());
+            }
+            else if (canFireball && rand < 90) 
+            {
+                StartCoroutine(PerformFireBall());
+            }
+            else if (dist <= attackRange && Time.time - lastAttackTime >= attackCooldown)
+            { 
+                StartCoroutine(PerformNormalAttack());
+            }
+            else
+            {
+                MoveTowardsPlayer(); 
             }
         }
-
-        MoveTowardsPlayer();
+        else
+        {
+            MoveTowardsPlayer();
+        }
     }
     
-
     void MoveTowardsPlayer()
     {
-        if (isUsingSkill) return; 
+        if (isUsingSkill) 
+        {
+            currentMovementInput = Vector2.zero;
+            return; 
+        }
         
         float dist = Vector2.Distance(transform.position, playerTransform.position);
         if (dist > attackRange)
         {
             anim.SetBool("isWalking", true); 
-            Vector2 dir = (playerTransform.position - transform.position).normalized;
-            rb.MovePosition(rb.position + dir * speed * Time.deltaTime);
+            currentMovementInput = (playerTransform.position - transform.position).normalized;
         }
         else
         {
             anim.SetBool("isWalking", false);
+            currentMovementInput = Vector2.zero;
         }
     }
 
-    void PerformNormalAttack()
+    IEnumerator PerformNormalAttack()
     {
-        Debug.Log("Boss: Normal Slash");
         isUsingSkill = true;
-        
+        currentMovementInput = Vector2.zero; 
         string triggerName = (Random.value > 0.5f) ? "Attack1" : "Attack2";
         anim.SetTrigger(triggerName); 
-        
         lastAttackTime = Time.time;
-        
-        var p = playerTransform.GetComponent<Player>();
-        if(p != null) Attack(p); 
-        
+        yield return new WaitForSeconds(0.4f);
+        CheckHitbox(damage);
         StartCoroutine(FinishSkill(0.6f));
     }
 
     IEnumerator PerformHeavyAttack()
     {
-        Debug.Log("Boss: Heavy Slash!");
         isUsingSkill = true;
+        currentMovementInput = Vector2.zero;
         anim.SetTrigger("AttackHeavy"); 
-        
         yield return new WaitForSeconds(0.6f);
-        
-        float dist = Vector2.Distance(transform.position, playerTransform.position);
-        if (dist <= attackRange * 1.5f) 
-        {
-            var p = playerTransform.GetComponent<Player>();
-            if (p != null) p.TakeDamage(damage * heavyDmgMult);
-        }
-
+        CheckHitbox(damage * heavyDmgMult, attackRadius * 1.5f);
         nextHeavyAttackTime = Time.time + heavyAttackCooldown;
         StartCoroutine(FinishSkill(1f));
+    }
+    
+    void CheckHitbox(float dmgAmount, float radiusScale = 1f)
+    {
+        Collider2D[] hitPlayers = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius * radiusScale, playerLayer);
+
+        foreach(Collider2D playerHit in hitPlayers)
+        {
+            if (playerHit.CompareTag("Player"))
+            {
+                Player p = playerHit.GetComponent<Player>();
+                if(p != null)
+                {
+                    p.TakeDamage(dmgAmount);
+                    Debug.Log("Boss Hit Player! Damage: " + dmgAmount);
+                }
+            }
+        }
     }
 
     IEnumerator PerformChargeAttack()
     {
-        Debug.Log("Boss: CHARGE!");
         isUsingSkill = true;
+        currentMovementInput = Vector2.zero;
         anim.SetTrigger("AttackCharge"); 
         
         yield return new WaitForSeconds(0.4f);
-
-        isCharging = true;
-        
+        isCharging = true; 
         yield return new WaitForSeconds(chargeDuration);
-
         isCharging = false;
         rb.velocity = Vector2.zero;
-
         nextChargeAttackTime = Time.time + chargeAttackCooldown;
         StartCoroutine(FinishSkill(0.5f));
     }
-
+    
     IEnumerator PerformFireBall()
     {
         Debug.Log("Boss: Cast Fireball!");
         isUsingSkill = true;
+        currentMovementInput = Vector2.zero;
         anim.SetBool("isWalking", false);
         rb.velocity = Vector2.zero;
-        
+        LookAtPlayer();
         anim.SetTrigger("CastFireball"); 
-
         yield return new WaitForSeconds(0.5f);
 
         if (fireBallPrefab != null)
         {
             GameObject fireball = Instantiate(fireBallPrefab, castPoint.position, Quaternion.identity);
-            float direction = facingRight ? 1f : -1f;
-            Vector2 launchVelocity = new Vector2(direction * 15f, 0); 
+            
+            float direction = transform.localScale.x > 0 ? -1f : 1f;
+            Vector2 launchVelocity = new Vector2(direction * 15f, 0);
+
             BossProjectile projectileScript = fireball.GetComponent<BossProjectile>();
             if (projectileScript != null)
             {
-                projectileScript.Setup(launchVelocity);
+                projectileScript.Setup(launchVelocity, damage);
             }
         }
         else
         {
-            Debug.LogError("Boss ไม่มี FireBall Prefab!");
+            Debug.LogError("Boss ไม่มี FireBall Prefab! ลาก Prefab มาใส่ใน Inspector ด้วย");
         }
 
         nextFireBallTime = Time.time + fireBallCooldown;
@@ -270,7 +290,15 @@ public class Boss : Enemy
         isUsingSkill = false;
         isCharging = false;
         rb.velocity = Vector2.zero;
+        currentMovementInput = Vector2.zero;
         SetGlobalCooldown(skillGlobalCooldown);
         anim.SetBool("isWalking", true);
+    }
+    
+    void OnDrawGizmosSelected()
+    {
+        if (attackPoint == null) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
     }
 }

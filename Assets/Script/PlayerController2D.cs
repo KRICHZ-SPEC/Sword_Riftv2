@@ -25,6 +25,7 @@ public class PlayerController2D : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
+    private Player playerStats;
 
     private bool isGrounded;
     private bool facingRight = true;
@@ -34,13 +35,20 @@ public class PlayerController2D : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        playerStats = GetComponent<Player>();
 
-        if (sr == null)
-            Debug.LogError("SpriteRenderer not found on Player");
+        if (sr == null) Debug.LogError("SpriteRenderer not found on Player");
+        if (playerStats == null) Debug.LogError("Player script not found on Player Object");
     }
 
     void Update()
     {
+        if (playerStats != null && playerStats.status.hp <= 0)
+        {
+            rb.velocity = Vector2.zero;
+            return; 
+        }
+
         float move = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
 
@@ -64,25 +72,13 @@ public class PlayerController2D : MonoBehaviour
 
     void FixedUpdate()
     {
-        bool circleCheck = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-
-        float rayLength = 0.3f;
-        Vector2 leftFoot = groundCheck.position + new Vector3(-0.15f, 0f);
-        Vector2 midFoot = groundCheck.position;
-        Vector2 rightFoot = groundCheck.position + new Vector3(0.15f, 0f);
-
-        bool hitLeft = Physics2D.Raycast(leftFoot, Vector2.down, rayLength, groundLayer);
-        bool hitMid = Physics2D.Raycast(midFoot, Vector2.down, rayLength, groundLayer);
-        bool hitRight = Physics2D.Raycast(rightFoot, Vector2.down, rayLength, groundLayer);
-
-        isGrounded = circleCheck || hitLeft || hitMid || hitRight;
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
     
     void Attack()
     {
         lastAttackTime = Time.time;
         anim.SetTrigger("Attack");
-        Debug.Log("Player Attacked!");
         
         Vector3 origin = attackPoint != null ? attackPoint.position : transform.position;
         
@@ -123,10 +119,11 @@ public class PlayerController2D : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
-        else
+        
+        if (groundCheck != null)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
 }

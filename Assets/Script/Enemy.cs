@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour, IPooledObject
     protected bool isDead = false;
     
     protected bool facingRight = true; 
+    protected Vector2 currentMovementInput;
 
     public static event Action<Enemy> OnEnemyDied;
 
@@ -43,6 +44,7 @@ public class Enemy : MonoBehaviour, IPooledObject
     {
         isDead = false;
         hp = maxHp;
+        currentMovementInput = Vector2.zero;
         
         if(anim != null) { anim.Rebind(); anim.Update(0f); }
         if(rb != null) { rb.velocity = Vector2.zero; rb.bodyType = RigidbodyType2D.Dynamic; }
@@ -68,8 +70,21 @@ public class Enemy : MonoBehaviour, IPooledObject
 
     protected virtual void Update()
     {
-        if (isDead) return;
+        if (isDead) {
+            currentMovementInput = Vector2.zero;
+            return;
+        }
         if (playerTransform != null) PatrolOrChase();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        if (isDead) return;
+        
+        if (currentMovementInput != Vector2.zero)
+        {
+            rb.MovePosition(rb.position + currentMovementInput * speed * Time.fixedDeltaTime);
+        }
     }
 
     protected virtual void PatrolOrChase()
@@ -82,12 +97,13 @@ public class Enemy : MonoBehaviour, IPooledObject
             if (dist > attackRange)
             {
                 anim.SetBool("isWalking", true); 
-                Vector2 dir = (playerTransform.position - transform.position).normalized;
-                rb.MovePosition(rb.position + dir * speed * Time.deltaTime);
+                currentMovementInput = (playerTransform.position - transform.position).normalized;
             }
             else
             {
+                currentMovementInput = Vector2.zero;
                 anim.SetBool("isWalking", false);
+                
                 if (Time.time - lastAttackTime >= attackCooldown)
                 {
                     anim.SetBool("isAttacking", true);
@@ -98,7 +114,11 @@ public class Enemy : MonoBehaviour, IPooledObject
                 }
             }
         }
-        else anim.SetBool("isWalking", false);
+        else 
+        {
+            currentMovementInput = Vector2.zero;
+            anim.SetBool("isWalking", false);
+        }
     }
     
     public void LookAtPlayer()
@@ -147,6 +167,7 @@ public class Enemy : MonoBehaviour, IPooledObject
     {
         if (isDead) return;
         isDead = true;
+        currentMovementInput = Vector2.zero;
         
         OnEnemyDied?.Invoke(this);
         
