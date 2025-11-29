@@ -133,6 +133,12 @@ public class Player : MonoBehaviour
         anim.SetBool("isDead", true);
         rb.velocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
+        
+        Debug.Log("Player Died. Calling Game Over UI...");
+        if (GameUIManager.Instance != null)
+        {
+            GameUIManager.Instance.Invoke("TriggerGameOver", 1.5f);
+        }
     }
     
     public void AddHp(float amount)
