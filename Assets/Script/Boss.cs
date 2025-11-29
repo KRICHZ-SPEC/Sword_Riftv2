@@ -13,6 +13,8 @@ public class Boss : Enemy
     public Transform castPoint;             
     public float chargeSpeed = 12f;         
     public float chargeDuration = 0.5f;
+    
+    public float fireballSpeed = 8f; 
 
     [Header("Attack Settings (Hitbox)")]
     public Transform attackPoint;           
@@ -167,7 +169,9 @@ public class Boss : Enemy
         if (dist > attackRange)
         {
             anim.SetBool("isWalking", true); 
-            currentMovementInput = (playerTransform.position - transform.position).normalized;
+            Vector2 direction = playerTransform.position - transform.position;
+            direction.y = 0; 
+            currentMovementInput = direction.normalized;
         }
         else
         {
@@ -248,12 +252,12 @@ public class Boss : Enemy
             
             float direction = transform.localScale.x > 0 ? -1f : 1f;
             
-            Vector2 launchVelocity = new Vector2(direction * 15f, 0);
-            
+            Vector2 launchVelocity = new Vector2(direction * fireballSpeed, 0);
+
             Vector3 fbScale = fireball.transform.localScale;
-            fbScale.x = Mathf.Abs(fbScale.x) * direction; 
+            fbScale.x = Mathf.Abs(fbScale.x) * direction;
             fireball.transform.localScale = fbScale;
-            
+
             BossProjectile projectileScript = fireball.GetComponent<BossProjectile>();
             if (projectileScript != null)
             {

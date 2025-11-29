@@ -208,6 +208,7 @@ MonoBehaviour:
   castPoint: {fileID: 1472725948141003159}
   chargeSpeed: 8
   chargeDuration: 0.6
+  fireballSpeed: 8
   attackPoint: {fileID: 5119663084802472226}
   attackRadius: 1.5
   playerLayer:

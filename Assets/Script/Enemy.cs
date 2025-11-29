@@ -76,14 +76,18 @@ public class Enemy : MonoBehaviour, IPooledObject
         }
         if (playerTransform != null) PatrolOrChase();
     }
-
+    
     protected virtual void FixedUpdate()
     {
         if (isDead) return;
         
         if (currentMovementInput != Vector2.zero)
         {
-            rb.MovePosition(rb.position + currentMovementInput * speed * Time.fixedDeltaTime);
+            rb.velocity = new Vector2(currentMovementInput.x * speed, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(0f, rb.velocity.y);
         }
     }
 
@@ -97,7 +101,10 @@ public class Enemy : MonoBehaviour, IPooledObject
             if (dist > attackRange)
             {
                 anim.SetBool("isWalking", true); 
-                currentMovementInput = (playerTransform.position - transform.position).normalized;
+                
+                Vector2 direction = playerTransform.position - transform.position;
+                direction.y = 0;
+                currentMovementInput = direction.normalized;
             }
             else
             {
