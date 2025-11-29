@@ -8,6 +8,8 @@ public class BossProjectile : MonoBehaviour
     private Rigidbody2D rb;
     public GameObject hitEffect;
     public float lifeTime = 5f;
+    
+    private GameObject owner;
 
     void Awake()
     {
@@ -22,13 +24,19 @@ public class BossProjectile : MonoBehaviour
         rb.velocity = velocity;
         rb.gravityScale = 0f;
         
-        Collider2D[] ownerColliders = ownerCollider.GetComponentsInParent<Collider2D>();
-        Collider2D myCollider = GetComponent<Collider2D>();
-
-        foreach (var col in ownerColliders)
+        if (ownerCollider != null)
         {
-            if (col != null && myCollider != null)
-                Physics2D.IgnoreCollision(myCollider, col);
+            owner = ownerCollider.gameObject;
+            Collider2D[] ownerColliders = ownerCollider.GetComponentsInChildren<Collider2D>();
+            Collider2D myCollider = GetComponent<Collider2D>();
+
+            foreach (var col in ownerColliders)
+            {
+                if (col != null && myCollider != null)
+                {
+                    Physics2D.IgnoreCollision(myCollider, col);
+                }
+            }
         }
 
         Destroy(gameObject, lifeTime);
@@ -36,6 +44,11 @@ public class BossProjectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (owner != null && (collision.gameObject == owner || collision.transform.IsChildOf(owner.transform))) 
+        {
+            return; 
+        }
+        if (collision.isTrigger) return;
         if (collision.CompareTag("Enemy") || collision.CompareTag("Boss")) 
         {
             return; 
@@ -43,10 +56,10 @@ public class BossProjectile : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
-            Player p = collision.GetComponent<Player>();
-            if (p != null)
+            if (collision.TryGetComponent(out Player p))
+            {
                 p.TakeDamage(damage);
-
+            }
             DestroyProjectile();
         }
         else 

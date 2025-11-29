@@ -12,6 +12,7 @@ public class WaveManager : MonoBehaviour
     
     [Header("Special Spawns")]
     public Transform tutorialSpawnPoint;
+    public Transform bossSpawnPoint;
     
     [Header("References")]
     public Player player;
@@ -110,6 +111,10 @@ public class WaveManager : MonoBehaviour
                 if (currentWaveIndex == 0 && tutorialSpawnPoint != null)
                 {
                     spawnPos = tutorialSpawnPoint.position;
+                }
+                else if (currentWaveIndex == 2 && bossSpawnPoint != null)
+                {
+                    spawnPos = bossSpawnPoint.position;
                 }
                 else
                 {

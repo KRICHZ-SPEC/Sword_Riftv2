@@ -80,7 +80,7 @@ public class Boss : Enemy
         if (isDead) return;
         if (isCharging)
         {
-            float moveDir = facingRight ? 1f : -1f; 
+            float moveDir = facingRight ? -1f : 1f; 
             rb.velocity = new Vector2(moveDir * chargeSpeed, rb.velocity.y);
         }
         else
@@ -246,9 +246,14 @@ public class Boss : Enemy
         {
             GameObject fireball = Instantiate(fireBallPrefab, castPoint.position, Quaternion.identity);
             
-            float direction = transform.localScale.x > 0 ? 1f : -1f;
+            float direction = transform.localScale.x > 0 ? -1f : 1f;
+            
             Vector2 launchVelocity = new Vector2(direction * 15f, 0);
-
+            
+            Vector3 fbScale = fireball.transform.localScale;
+            fbScale.x = Mathf.Abs(fbScale.x) * direction; 
+            fireball.transform.localScale = fbScale;
+            
             BossProjectile projectileScript = fireball.GetComponent<BossProjectile>();
             if (projectileScript != null)
             {
