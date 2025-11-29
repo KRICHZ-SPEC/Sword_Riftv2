@@ -53,13 +53,24 @@ public class Boss : Enemy
         isUsingSkill = false;
         isCharging = false;
         if(sr != null) sr.color = Color.white; 
+        
+        if (BossHealthBar.Instance != null)
+        {
+            BossHealthBar.Instance.InitializeBar(bossName, maxHp);
+        }
     }
 
     protected override void Update() 
     {
+        if (BossHealthBar.Instance != null)
+        {
+            BossHealthBar.Instance.UpdateHealth(hp);
+        }
+
         if (isDead) 
         {
             rb.velocity = Vector2.zero;
+            if (BossHealthBar.Instance != null) BossHealthBar.Instance.HideBar();
             return;
         }
         
@@ -316,8 +327,13 @@ public class Boss : Enemy
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRadius);
     }
+
     void OnDisable()
     {
         StopAllCoroutines();
+        if (BossHealthBar.Instance != null)
+        {
+            BossHealthBar.Instance.HideBar();
+        }
     }
 }
