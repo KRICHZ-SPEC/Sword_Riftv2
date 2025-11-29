@@ -209,12 +209,16 @@ MonoBehaviour:
   chargeSpeed: 8
   chargeDuration: 0.6
   fireballSpeed: 8
+  minionPrefab: {fileID: 3237470933422773578, guid: a33e8cdad6d7886408a37eaebc4de1c3, type: 3}
+  minionCount: 2
+  summonCooldown: 15
+  summonRadius: 1
   attackPoint: {fileID: 5119663084802472226}
   attackRadius: 1.5
   playerLayer:
     serializedVersion: 2
     m_Bits: 129
-  skillGlobalCooldown: 1.5
+  skillGlobalCooldown: 2
   heavyAttackCooldown: 6
   chargeAttackCooldown: 8
   fireBallCooldown: 5

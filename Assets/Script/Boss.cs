@@ -13,8 +13,14 @@ public class Boss : Enemy
     public Transform castPoint;             
     public float chargeSpeed = 12f;         
     public float chargeDuration = 0.5f;
-    
     public float fireballSpeed = 8f; 
+
+    [Header("Summon Skill")] 
+    public GameObject minionPrefab;      
+    public int minionCount = 2;          
+    public float summonCooldown = 15f;   
+    public float summonRadius = 3f;      
+    private float nextSummonTime;        
 
     [Header("Attack Settings (Hitbox)")]
     public Transform attackPoint;           
@@ -71,6 +77,7 @@ public class Boss : Enemy
         {
             rb.velocity = Vector2.zero;
             if (BossHealthBar.Instance != null) BossHealthBar.Instance.HideBar();
+            KillAllMinions();
             return;
         }
         
@@ -85,6 +92,24 @@ public class Boss : Enemy
         if (playerTransform != null)
         {
             BossAI();
+        }
+    }
+    void KillAllMinions()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach(GameObject enemy in enemies)
+        {
+            if(enemy != this.gameObject)
+            {
+                if(enemy.TryGetComponent(out Enemy e))
+                {
+                    e.TakeDamage(99999); 
+                }
+                else
+                {
+                    Destroy(enemy);
+                }
+            }
         }
     }
 
@@ -139,9 +164,16 @@ public class Boss : Enemy
             bool canHeavy = (Time.time >= nextHeavyAttackTime && dist <= attackRange * 1.5f);
             bool canCharge = (Time.time >= nextChargeAttackTime && dist <= attackRange * 3f);
             bool canFireball = (Time.time >= nextFireBallTime);
-            int rand = Random.Range(0, 100);
+            
+            bool canSummon = (Time.time >= nextSummonTime && minionPrefab != null);
 
-            if (canHeavy && rand < 40) 
+            int rand = Random.Range(0, 100);
+            
+            if (canSummon && rand < 20)
+            {
+                StartCoroutine(PerformSummon());
+            }
+            else if (canHeavy && rand < 50) 
             {
                 StartCoroutine(PerformHeavyAttack());
             }
@@ -190,13 +222,14 @@ public class Boss : Enemy
             currentMovementInput = Vector2.zero;
         }
     }
-
+    
     IEnumerator PerformNormalAttack()
     {
         isUsingSkill = true;
         currentMovementInput = Vector2.zero; 
-        string triggerName = (Random.value > 0.5f) ? "Attack1" : "Attack2";
-        anim.SetTrigger(triggerName); 
+        
+        anim.SetTrigger("Attack1");
+        
         lastAttackTime = Time.time;
         yield return new WaitForSeconds(0.4f);
         CheckHitbox(damage);
@@ -211,6 +244,48 @@ public class Boss : Enemy
         yield return new WaitForSeconds(0.6f);
         CheckHitbox(damage * heavyDmgMult, attackRadius * 1.5f);
         nextHeavyAttackTime = Time.time + heavyAttackCooldown;
+        StartCoroutine(FinishSkill(1f));
+    }
+    
+    IEnumerator PerformSummon()
+    {
+        Debug.Log("Boss: Casting Summon!");
+        isUsingSkill = true;
+        currentMovementInput = Vector2.zero;
+        rb.velocity = Vector2.zero;
+        
+        anim.SetTrigger("CastSummon"); 
+        
+        yield return new WaitForSeconds(0.5f);
+
+        if (minionPrefab != null)
+        {
+            float angleStep = 360f / minionCount;
+            float startAngle = Random.Range(0f, 360f);
+
+            for (int i = 0; i < minionCount; i++)
+            {
+                float currentAngle = startAngle + (i * angleStep);
+                
+                float radian = currentAngle * Mathf.Deg2Rad;
+                Vector2 spawnDir = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
+                
+                Vector3 spawnPos = transform.position + (Vector3)(spawnDir * summonRadius);
+                
+                Instantiate(minionPrefab, spawnPos, Quaternion.identity);
+                
+                if (WaveManager.Instance != null)
+                {
+                    WaveManager.Instance.AddEnemy();
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("Boss: Minion Prefab is missing!");
+        }
+
+        nextSummonTime = Time.time + summonCooldown;
         StartCoroutine(FinishSkill(1f));
     }
     

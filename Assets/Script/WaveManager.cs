@@ -164,4 +164,8 @@ public class WaveManager : MonoBehaviour
     {
         StartCoroutine(StartWaveRoutine(currentWaveIndex + 1));
     }
+    public void AddEnemy()
+    {
+        enemiesRemaining++;
+    }
 }
