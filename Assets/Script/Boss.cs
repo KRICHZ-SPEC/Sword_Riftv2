@@ -80,7 +80,7 @@ public class Boss : Enemy
         if (isDead) return;
         if (isCharging)
         {
-            float moveDir = facingRight ? -1f : 1f; 
+            float moveDir = facingRight ? 1f : -1f; 
             rb.velocity = new Vector2(moveDir * chargeSpeed, rb.velocity.y);
         }
         else
@@ -88,6 +88,7 @@ public class Boss : Enemy
             base.FixedUpdate();
         }
     }
+
     void CheckPhase() 
     {
         if (maxHp <= 0) return;
@@ -107,7 +108,12 @@ public class Boss : Enemy
     {
         if (isCharging) return;
         float dist = Vector2.Distance(transform.position, playerTransform.position);
-        LookAtPlayer();
+        
+        if (!isUsingSkill || Time.time >= nextChargeAttackTime) 
+        {
+            LookAtPlayer();
+        }
+
         if (Time.time < globalSkillReadyTime)
         {
             MoveTowardsPlayer();
@@ -121,6 +127,7 @@ public class Boss : Enemy
             bool canCharge = (Time.time >= nextChargeAttackTime && dist <= attackRange * 3f);
             bool canFireball = (Time.time >= nextFireBallTime);
             int rand = Random.Range(0, 100);
+
             if (canHeavy && rand < 40) 
             {
                 StartCoroutine(PerformHeavyAttack());
@@ -200,8 +207,7 @@ public class Boss : Enemy
         {
             if (playerHit.CompareTag("Player"))
             {
-                Player p = playerHit.GetComponent<Player>();
-                if(p != null)
+                if(playerHit.TryGetComponent(out Player p))
                 {
                     p.TakeDamage(dmgAmount);
                     Debug.Log("Boss Hit Player! Damage: " + dmgAmount);
@@ -240,7 +246,7 @@ public class Boss : Enemy
         {
             GameObject fireball = Instantiate(fireBallPrefab, castPoint.position, Quaternion.identity);
             
-            float direction = transform.localScale.x > 0 ? -1f : 1f;
+            float direction = transform.localScale.x > 0 ? 1f : -1f;
             Vector2 launchVelocity = new Vector2(direction * 15f, 0);
 
             BossProjectile projectileScript = fireball.GetComponent<BossProjectile>();
@@ -262,17 +268,16 @@ public class Boss : Enemy
     {
         if (isCharging && collision.gameObject.CompareTag("Player"))
         {
-            Player p = collision.gameObject.GetComponent<Player>();
-            if (p != null)
+            if (collision.gameObject.TryGetComponent(out Player p))
             {
                 p.TakeDamage(damage * chargeDmgMult);
-                Rigidbody2D playerRb = p.GetComponent<Rigidbody2D>();
-                if(playerRb)
+                if(collision.gameObject.TryGetComponent(out Rigidbody2D playerRb))
                 {
                     Vector2 knockDir = (p.transform.position - transform.position).normalized;
                     playerRb.AddForce(knockDir * 15f, ForceMode2D.Impulse);
-                    PlayerController2D pc = p.GetComponent<PlayerController2D>();
-                    if (pc != null) StartCoroutine(pc.DisableMovement(0.3f));
+                    
+                    if (p.TryGetComponent(out PlayerController2D pc)) 
+                        StartCoroutine(pc.DisableMovement(0.3f));
                 }
             }
             isCharging = false; 

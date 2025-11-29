@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerController2D : MonoBehaviour
 {
+    [Header("Controls")]
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode attackKey = KeyCode.J;
+
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpForce = 8f;
@@ -50,20 +54,20 @@ public class PlayerController2D : MonoBehaviour
             if (playerStats.status.hp <= 0) rb.velocity = Vector2.zero; 
             return; 
         }
-
+        
         float move = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
-
+        
         if (move > 0 && !facingRight) Flip();
         else if (move < 0 && facingRight) Flip();
         
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(jumpKey)) && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             anim.SetTrigger("Jump");
         }
         
-        if (Input.GetKeyDown(KeyCode.J) && Time.time - lastAttackTime >= attackCooldown)
+        if (Input.GetKeyDown(attackKey) && Time.time - lastAttackTime >= attackCooldown)
         {
             Attack();
         }
@@ -85,19 +89,15 @@ public class PlayerController2D : MonoBehaviour
         Vector3 origin = attackPoint != null ? attackPoint.position : transform.position;
         
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(origin, attackRange, enemyLayer);
-
+        
         foreach (Collider2D hit in hitColliders)
         {
-            Enemy e = hit.GetComponent<Enemy>();
-            if (e != null)
+            if (hit.TryGetComponent(out Enemy e))
             {
                 e.TakeDamage(attackDamage); 
                 Debug.Log("Hit Enemy: " + e.name);
-                continue;
             }
-            
-            EnemyDummy dummy = hit.GetComponent<EnemyDummy>();
-            if (dummy != null)
+            else if (hit.TryGetComponent(out EnemyDummy dummy))
             {
                 dummy.TakeDamage(attackDamage); 
             }

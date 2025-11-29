@@ -1561,6 +1561,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87c169788adb0e74aa4c006097fcc61c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController2D
+  jumpKey: 32
+  attackKey: 106
   moveSpeed: 5
   jumpForce: 8
   canMove: 1
@@ -1613,8 +1615,7 @@ MonoBehaviour:
     maxHp: 100
     maxMp: 100
   initialSkill: {fileID: 0}
-  skillInstances:
-  - skillAsset: {fileID: 11400000, guid: f4b5741bb2bb3e442866313126f5f946, type: 2}
+  skillInstances: []
   healthBar: {fileID: 1100149345}
   inventory: []
   activeEffects:
