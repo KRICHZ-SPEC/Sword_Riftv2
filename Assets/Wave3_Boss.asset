@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a42eb6e273906274eb8526b5ec4ff7d6, type: 3}
   m_Name: Wave3_Boss
   m_EditorClassIdentifier: Assembly-CSharp::WaveConfig
-  waveName: 
-  startMessage: 
-  enemiesToSpawn: []
+  waveName: Wave3_Boss
+  startMessage: FINAL WAVE|BOSS INCOMING!
+  enemiesToSpawn:
+  - enemyPrefab: {fileID: 2412056541547443300, guid: 8bf87c85b35b5f8419faa2c72e230a85, type: 3}
+    count: 1
   skillUnlock: {fileID: 0}
