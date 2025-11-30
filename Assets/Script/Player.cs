@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public List<SkillInstance> skillInstances = new List<SkillInstance>();
     
     private SkillInstance fireBallInstance;
+    
+    public SkillInstance FireBallSkillInstance => fireBallInstance;
 
     [Header("Linked UI")]
     public HealthBar healthBar;
