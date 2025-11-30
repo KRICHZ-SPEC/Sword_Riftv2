@@ -45,6 +45,10 @@ public class WaveManager : MonoBehaviour
         if (index >= allWaves.Count)
         {
             if (tutorialUI) yield return StartCoroutine(tutorialUI.ShowText("VICTORY!", 5f));
+            if (GameUIManager.Instance != null) 
+            {
+                GameUIManager.Instance.TriggerVictory();
+            }
             yield break;
         }
 

@@ -36,13 +36,10 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    public void TriggerGameOver()
+    public void TriggerVictory()
     {
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(true);
-            Time.timeScale = 0f; 
-        }
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene("MainMenu"); 
     }
 
     public void PauseGame()
