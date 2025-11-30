@@ -7,30 +7,8 @@ public class Item : MonoBehaviour
     public int itemID;
     public string itemName;
     public ItemType type;
-    public float value;
+    public float value; 
     public int rarity;
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
-            {
-                OnPickup(player);
-            }
-        }
-        Debug.Log($"Trigger enter: {other.name}");
-        if (other.CompareTag("Player"))
-        {
-            Player player = other.GetComponent<Player>();
-            if (player != null)
-            {
-                Debug.Log("Picked up item!");
-                OnPickup(player);
-            }
-        }
-    }
 
     public void Use(Player player) 
     {
@@ -70,7 +48,7 @@ public class Item : MonoBehaviour
         else 
         {
             Debug.Log($"{itemName} added to inventory.");
+            Destroy(gameObject); 
         }
-        Destroy(gameObject);
     }
 }
