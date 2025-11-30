@@ -128,15 +128,17 @@ public class Player : MonoBehaviour
 
     void Die()
     {
+        DeathUIManager.Instance.TriggerDeath();
         if (isDead) return;
         isDead = true;
+
         anim.SetBool("isDead", true);
         rb.velocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
         
         if (GameUIManager.Instance != null)
         {
-            GameUIManager.Instance.Invoke("TriggerGameOver", 1.5f);
+            GameUIManager.Instance.Invoke("TriggerGameOver", 1.2f);
         }
         else
         {

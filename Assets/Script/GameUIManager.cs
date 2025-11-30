@@ -7,7 +7,7 @@ public class GameUIManager : MonoBehaviour
 
     [Header("UI References")]
     public GameObject gameOverPanel;
-    public GameObject pausePanel;   
+    public GameObject pausePanel;
 
     private bool isPaused = false;
 
@@ -21,7 +21,7 @@ public class GameUIManager : MonoBehaviour
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (pausePanel != null) pausePanel.SetActive(false);
-        
+
         Time.timeScale = 1f;
     }
 
@@ -35,11 +35,25 @@ public class GameUIManager : MonoBehaviour
             else PauseGame();
         }
     }
+    public void TriggerGameOver()
+    {
+        Time.timeScale = 0f;
 
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+        else
+            Debug.LogError("GameOver Panel not assigned!");
+    }
     public void TriggerVictory()
     {
-        Time.timeScale = 1f; 
-        SceneManager.LoadScene("MainMenu"); 
+        Debug.Log("Victory Triggered!");
+
+        Time.timeScale = 0f;
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+        else
+            Debug.LogError("GameOver Panel not assigned!");
     }
 
     public void PauseGame()
