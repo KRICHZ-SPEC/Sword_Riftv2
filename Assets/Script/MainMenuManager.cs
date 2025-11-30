@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    public string gameSceneName = "Sword_Rift"; 
+    public string gameSceneName = "SWORDRIFT"; 
 
     public void StartGame()
     {
@@ -12,7 +12,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Quitting Game...");
         Application.Quit();
     }
 }
