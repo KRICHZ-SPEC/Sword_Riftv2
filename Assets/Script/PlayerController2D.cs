@@ -39,7 +39,7 @@ public class PlayerController2D : MonoBehaviour
 
     private bool isGrounded;
     private bool facingRight = true;
-    
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -55,23 +55,23 @@ public class PlayerController2D : MonoBehaviour
     {
         if ((playerStats != null && playerStats.status.hp <= 0) || !canMove)
         {
-            if (playerStats.status.hp <= 0) rb.velocity = Vector2.zero; 
-            return; 
+            if (playerStats.status.hp <= 0) rb.velocity = Vector2.zero;
+            return;
         }
         
         float move = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
-        
+
         if (isGrounded && Mathf.Abs(move) > 0.1f)
         {
             if (Time.time >= nextFootstepTime)
             {
                 nextFootstepTime = Time.time + footstepRate;
-                if(AudioManager.Instance != null) 
+                if (AudioManager.Instance != null)
                     AudioManager.Instance.PlaySFX("Walk");
             }
         }
-        
+
         if (move > 0 && !facingRight) Flip();
         else if (move < 0 && facingRight) Flip();
         
@@ -85,7 +85,7 @@ public class PlayerController2D : MonoBehaviour
         {
             Attack();
         }
-        
+
         anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
         anim.SetBool("isGrounded", isGrounded);
     }
@@ -94,29 +94,28 @@ public class PlayerController2D : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
-    
+
     void Attack()
     {
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
             AudioManager.Instance.PlaySFX("Attack");
 
         lastAttackTime = Time.time;
         anim.SetTrigger("Attack");
-        
+
         Vector3 origin = attackPoint != null ? attackPoint.position : transform.position;
-        
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(origin, attackRange, enemyLayer);
-        
+
         foreach (Collider2D hit in hitColliders)
         {
             if (hit.TryGetComponent(out Enemy e))
             {
-                e.TakeDamage(attackDamage); 
+                e.TakeDamage(attackDamage);
                 Debug.Log("Hit Enemy: " + e.name);
             }
             else if (hit.TryGetComponent(out EnemyDummy dummy))
             {
-                dummy.TakeDamage(attackDamage); 
+                dummy.TakeDamage(attackDamage);
             }
         }
     }
@@ -128,14 +127,14 @@ public class PlayerController2D : MonoBehaviour
         s.x *= -1;
         transform.localScale = s;
     }
-    
+
     public IEnumerator DisableMovement(float time)
     {
         canMove = false;
         yield return new WaitForSeconds(time);
         canMove = true;
     }
-    
+
     private void OnDrawGizmosSelected()
     {
         if (attackPoint != null)
@@ -143,7 +142,7 @@ public class PlayerController2D : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
-        
+
         if (groundCheck != null)
         {
             Gizmos.color = Color.blue;
