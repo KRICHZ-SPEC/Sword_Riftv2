@@ -39591,8 +39591,8 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
   - name: BossSummon
-    clip: {fileID: 8300000, guid: 31efaf78d51dac342b94db15fe9ec7bb, type: 3}
-    volume: 0.5
+    clip: {fileID: 8300000, guid: 0235d55c1347bc341a2e6f3e623f5972, type: 3}
+    volume: 1
     pitch: 1
   - name: BossHeavyAttack
     clip: {fileID: 8300000, guid: 2fad033d40ac9214e970700ef3b9ab1d, type: 3}

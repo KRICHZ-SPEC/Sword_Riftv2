@@ -228,7 +228,7 @@ MonoBehaviour:
   heavyDmgMult: 1.8
   chargeDmgMult: 1.5
   heavyAttackSound: BossHeavyAttack
-  chargePrepareSound: BossPhase
+  chargePrepareSound: BossPrepre
   chargeImpactSound: BossImpact
   fireballCastSound: BossFire
   summonSound: BossSummon
