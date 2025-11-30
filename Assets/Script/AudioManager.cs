@@ -37,7 +37,7 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        PlayMusic("ThemeSong"); 
+        PlayMusic("ThemeSong");
     }
 
     public void PlayMusic(string name)
@@ -45,9 +45,11 @@ public class AudioManager : MonoBehaviour
         Sound s = Array.Find(musicSounds, x => x.name == name);
         if (s == null)
         {
-            Debug.LogWarning("Sound: " + name + " not found!");
+            Debug.LogError("ไม่เจอเพลงชื่อ: " + name + " ในรายการ Music Sounds!");
             return;
         }
+        
+        Debug.Log("กำลังเล่นเพลง: " + name);
 
         musicSource.clip = s.clip;
         musicSource.volume = s.volume;
@@ -61,9 +63,12 @@ public class AudioManager : MonoBehaviour
         Sound s = Array.Find(sfxSounds, x => x.name == name);
         if (s == null)
         {
-            Debug.LogWarning("Sound: " + name + " not found!");
+            Debug.LogError("ไม่เจอเสียง Effect ชื่อ: " + name + " เช็คตัวสะกดดีๆ!");
             return;
         }
+        
+        if (name == "Fireball") Debug.Log("ยิง Fireball! (เล่นเสียง)");
+
         sfxSource.PlayOneShot(s.clip, s.volume);
     }
 }

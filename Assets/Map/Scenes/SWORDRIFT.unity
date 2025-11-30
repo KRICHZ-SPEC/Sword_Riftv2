@@ -2012,7 +2012,7 @@ AudioSource:
   m_GameObject: {fileID: 116997209}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 74751d7a0204ede46b2f6019d50ba130, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -9365,7 +9365,7 @@ AudioSource:
   m_GameObject: {fileID: 648561961}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 74751d7a0204ede46b2f6019d50ba130, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -24268,6 +24268,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 789221176}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1641594674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1641594675}
+  m_Layer: 0
+  m_Name: Wave2Manager (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1641594675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641594674}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 40.78, y: -0.81, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1661936011
 GameObject:
@@ -39509,7 +39540,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicSource: {fileID: 648561963}
   sfxSource: {fileID: 116997211}
-  musicSounds: []
+  musicSounds:
+  - name: ThemeSong
+    clip: {fileID: 8300000, guid: 91ab0103d4ba99d4d9bafeced5807174, type: 3}
+    volume: 1
+    pitch: 0
   sfxSounds:
   - name: Attack
     clip: {fileID: 8300000, guid: 976d57c19406be547b5aaa00d27cfece, type: 3}
@@ -39524,8 +39559,8 @@ MonoBehaviour:
     volume: 0.3
     pitch: 0.1
   - name: Fireball
-    clip: {fileID: 8300000, guid: 14d04c619b651224e86f96f3ac204b43, type: 3}
-    volume: 0.3
+    clip: {fileID: 8300000, guid: 90300c2bb7fd7d74bb8af38b68d1ff0a, type: 3}
+    volume: 0.5
     pitch: 0
 --- !u!4 &1880161253
 Transform:
@@ -39536,7 +39571,7 @@ Transform:
   m_GameObject: {fileID: 1880161251}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.98702, y: 2.42179, z: 0}
+  m_LocalPosition: {x: 27.87, y: 2.42179, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -41498,6 +41533,7 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 1739368903}
   - {fileID: 1971263007}
+  - {fileID: 1641594675}
   tutorialSpawnPoint: {fileID: 1445426530}
   bossSpawnPoint: {fileID: 238896240}
   player: {fileID: 113796231}
@@ -43632,6 +43668,7 @@ SceneRoots:
   - {fileID: 178969638}
   - {fileID: 1739368903}
   - {fileID: 1971263007}
+  - {fileID: 1641594675}
   - {fileID: 1110210470}
   - {fileID: 1852722558}
   - {fileID: 238896240}
