@@ -28,6 +28,10 @@ public class PlayerController2D : MonoBehaviour
     public float attackRange = 0.8f;
     public LayerMask enemyLayer;
 
+    [Header("Audio Settings")]
+    public float footstepRate = 0.4f;
+    private float nextFootstepTime = 0f;
+
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
@@ -58,6 +62,16 @@ public class PlayerController2D : MonoBehaviour
         float move = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(move * moveSpeed, rb.velocity.y);
         
+        if (isGrounded && Mathf.Abs(move) > 0.1f)
+        {
+            if (Time.time >= nextFootstepTime)
+            {
+                nextFootstepTime = Time.time + footstepRate;
+                if(AudioManager.Instance != null) 
+                    AudioManager.Instance.PlaySFX("Walk");
+            }
+        }
+        
         if (move > 0 && !facingRight) Flip();
         else if (move < 0 && facingRight) Flip();
         
@@ -83,6 +97,9 @@ public class PlayerController2D : MonoBehaviour
     
     void Attack()
     {
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX("Attack");
+
         lastAttackTime = Time.time;
         anim.SetTrigger("Attack");
         

@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
     public List<SkillInstance> skillInstances = new List<SkillInstance>();
     
     private SkillInstance fireBallInstance;
-    
     public SkillInstance FireBallSkillInstance => fireBallInstance;
 
     [Header("Linked UI")]
@@ -111,6 +110,9 @@ public class Player : MonoBehaviour
         if (isDead) return;
 
         status.TakeDamage(amount);
+        
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX("Hurt");
 
         if (healthBar != null)
             healthBar.UpdateBar();
