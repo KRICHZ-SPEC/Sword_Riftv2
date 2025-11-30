@@ -2012,7 +2012,7 @@ AudioSource:
   m_GameObject: {fileID: 116997209}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 74751d7a0204ede46b2f6019d50ba130, type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -9365,7 +9365,7 @@ AudioSource:
   m_GameObject: {fileID: 648561961}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 74751d7a0204ede46b2f6019d50ba130, type: 2}
+  OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -39543,8 +39543,8 @@ MonoBehaviour:
   musicSounds:
   - name: ThemeSong
     clip: {fileID: 8300000, guid: 91ab0103d4ba99d4d9bafeced5807174, type: 3}
-    volume: 1
-    pitch: 0
+    volume: 0.5
+    pitch: 1
   sfxSounds:
   - name: Attack
     clip: {fileID: 8300000, guid: 976d57c19406be547b5aaa00d27cfece, type: 3}
@@ -39560,8 +39560,8 @@ MonoBehaviour:
     pitch: 0.1
   - name: Fireball
     clip: {fileID: 8300000, guid: 90300c2bb7fd7d74bb8af38b68d1ff0a, type: 3}
-    volume: 0.5
-    pitch: 0
+    volume: 0.3
+    pitch: 1
 --- !u!4 &1880161253
 Transform:
   m_ObjectHideFlags: 0
