@@ -39562,6 +39562,54 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 90300c2bb7fd7d74bb8af38b68d1ff0a, type: 3}
     volume: 0.3
     pitch: 1
+  - name: BossFire
+    clip: {fileID: 8300000, guid: d7134988ab978884fbff9e49099df2f8, type: 3}
+    volume: 0.3
+    pitch: 1
+  - name: EnemyAttack
+    clip: {fileID: 8300000, guid: 3c738a01bc1d9bf48a8e8dd9b97b492c, type: 3}
+    volume: 0.3
+    pitch: 1
+  - name: EnemyHurt
+    clip: {fileID: 8300000, guid: f6b76ada99ef9b547bfd808e86d583f3, type: 3}
+    volume: 0.3
+    pitch: 1
+  - name: EnemyDie
+    clip: {fileID: 8300000, guid: 6e4fddbc0e817324eaca1e4bd5df7a39, type: 3}
+    volume: 0.3
+    pitch: 1
+  - name: BossAttack
+    clip: {fileID: 8300000, guid: e66c0b7d8b2d015488129df757b0392e, type: 3}
+    volume: 0.5
+    pitch: 1
+  - name: BossHurt
+    clip: {fileID: 8300000, guid: 9bb08ea037e8c66438cb562a6386b924, type: 3}
+    volume: 0.3
+    pitch: 1
+  - name: BossDie
+    clip: {fileID: 8300000, guid: 31efaf78d51dac342b94db15fe9ec7bb, type: 3}
+    volume: 0.5
+    pitch: 1
+  - name: BossSummon
+    clip: {fileID: 8300000, guid: 31efaf78d51dac342b94db15fe9ec7bb, type: 3}
+    volume: 0.5
+    pitch: 1
+  - name: BossHeavyAttack
+    clip: {fileID: 8300000, guid: 2fad033d40ac9214e970700ef3b9ab1d, type: 3}
+    volume: 0.5
+    pitch: 1
+  - name: BossPhase
+    clip: {fileID: 8300000, guid: 87561e196f557ab4691d93847ee880fe, type: 3}
+    volume: 0.5
+    pitch: 1
+  - name: BossPrepre
+    clip: {fileID: 8300000, guid: de2892a2a05a8d84a9d67c4236eb06b5, type: 3}
+    volume: 0.5
+    pitch: 1
+  - name: BossImpact
+    clip: {fileID: 8300000, guid: a0fa5fc1fb38d4c4b82d138d82281070, type: 3}
+    volume: 0.5
+    pitch: 1
 --- !u!4 &1880161253
 Transform:
   m_ObjectHideFlags: 0

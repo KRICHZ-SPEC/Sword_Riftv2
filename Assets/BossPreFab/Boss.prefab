@@ -201,6 +201,9 @@ MonoBehaviour:
   dropChance: 0.3
   lootDrops:
   - {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
+  attackSoundName: BossAttack
+  hurtSoundName: BossHurt
+  deathSoundName: BossDie
   bossName: NightBorne
   phase: 1
   enragedThreshold: 0.4
@@ -224,6 +227,12 @@ MonoBehaviour:
   fireBallCooldown: 5
   heavyDmgMult: 1.8
   chargeDmgMult: 1.5
+  heavyAttackSound: BossHeavyAttack
+  chargePrepareSound: BossPhase
+  chargeImpactSound: BossImpact
+  fireballCastSound: BossFire
+  summonSound: BossSummon
+  rageSound: BossPhase
 --- !u!50 &7356955771508030762
 Rigidbody2D:
   serializedVersion: 5

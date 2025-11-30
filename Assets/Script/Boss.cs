@@ -36,6 +36,14 @@ public class Boss : Enemy
     [Header("Damage Multipliers")]
     public float heavyDmgMult = 1.5f;
     public float chargeDmgMult = 1.2f;
+
+    [Header("Boss Audio SFX")]
+    public string heavyAttackSound;     
+    public string chargePrepareSound;   
+    public string chargeImpactSound;    
+    public string fireballCastSound;    
+    public string summonSound;          
+    public string rageSound;            
     
     private float nextHeavyAttackTime;
     private float nextChargeAttackTime;
@@ -136,6 +144,10 @@ public class Boss : Enemy
         {
             phase = 2;
             Debug.Log(bossName + " : ENRAGED MODE!");
+            
+            if (!string.IsNullOrEmpty(rageSound) && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(rageSound);
+
             if(sr != null) sr.color = new Color(1f, 0.5f, 1f); 
             speed *= 1.4f; 
             attackCooldown *= 0.7f; 
@@ -230,6 +242,9 @@ public class Boss : Enemy
         
         anim.SetTrigger("Attack1");
         
+        if (!string.IsNullOrEmpty(attackSoundName) && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(attackSoundName);
+        
         lastAttackTime = Time.time;
         yield return new WaitForSeconds(0.4f);
         CheckHitbox(damage);
@@ -241,6 +256,10 @@ public class Boss : Enemy
         isUsingSkill = true;
         currentMovementInput = Vector2.zero;
         anim.SetTrigger("AttackHeavy"); 
+        
+        if (!string.IsNullOrEmpty(heavyAttackSound) && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(heavyAttackSound);
+
         yield return new WaitForSeconds(0.6f);
         CheckHitbox(damage * heavyDmgMult, attackRadius * 1.5f);
         nextHeavyAttackTime = Time.time + heavyAttackCooldown;
@@ -255,6 +274,9 @@ public class Boss : Enemy
         rb.velocity = Vector2.zero;
         
         anim.SetTrigger("CastSummon"); 
+        
+        if (!string.IsNullOrEmpty(summonSound) && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(summonSound);
         
         yield return new WaitForSeconds(0.5f);
 
@@ -312,6 +334,9 @@ public class Boss : Enemy
         currentMovementInput = Vector2.zero;
         anim.SetTrigger("AttackCharge"); 
         
+        if (!string.IsNullOrEmpty(chargePrepareSound) && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(chargePrepareSound);
+
         yield return new WaitForSeconds(0.4f);
         isCharging = true; 
         yield return new WaitForSeconds(chargeDuration);
@@ -330,6 +355,10 @@ public class Boss : Enemy
         rb.velocity = Vector2.zero;
         LookAtPlayer();
         anim.SetTrigger("CastFireball"); 
+        
+        if (!string.IsNullOrEmpty(fireballCastSound) && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(fireballCastSound);
+
         yield return new WaitForSeconds(0.5f);
 
         if (fireBallPrefab != null)
@@ -363,6 +392,9 @@ public class Boss : Enemy
     {
         if (isCharging && collision.gameObject.CompareTag("Player"))
         {
+            if (!string.IsNullOrEmpty(chargeImpactSound) && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(chargeImpactSound);
+
             if (collision.gameObject.TryGetComponent(out Player p))
             {
                 p.TakeDamage(damage * chargeDmgMult);

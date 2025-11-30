@@ -20,6 +20,11 @@ public class Enemy : MonoBehaviour, IPooledObject
     [Range(0, 1)] public float dropChance = 0.3f;
     public List<GameObject> lootDrops;
 
+    [Header("Audio Settings")]
+    public string attackSoundName; 
+    public string hurtSoundName;   
+    public string deathSoundName;  
+
     protected Transform playerTransform;
     protected Rigidbody2D rb;
     protected Animator anim;
@@ -114,6 +119,12 @@ public class Enemy : MonoBehaviour, IPooledObject
                 if (Time.time - lastAttackTime >= attackCooldown)
                 {
                     anim.SetBool("isAttacking", true);
+                    
+                    if (!string.IsNullOrEmpty(attackSoundName) && AudioManager.Instance != null)
+                    {
+                        AudioManager.Instance.PlaySFX(attackSoundName);
+                    }
+
                     lastAttackTime = Time.time;
                     var p = playerTransform.GetComponent<Player>();
                     if(p != null) Attack(p);
@@ -159,6 +170,12 @@ public class Enemy : MonoBehaviour, IPooledObject
         if (isDead) return;
         hp -= amount;
         anim.SetTrigger("isHurt");
+        
+        if (!string.IsNullOrEmpty(hurtSoundName) && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(hurtSoundName);
+        }
+
         StartCoroutine(FlashRed());
         if (hp <= 0) Die();
     }
@@ -175,6 +192,11 @@ public class Enemy : MonoBehaviour, IPooledObject
         if (isDead) return;
         isDead = true;
         currentMovementInput = Vector2.zero;
+        
+        if (!string.IsNullOrEmpty(deathSoundName) && AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(deathSoundName);
+        }
         
         OnEnemyDied?.Invoke(this);
         

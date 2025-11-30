@@ -215,3 +215,6 @@ MonoBehaviour:
   dropChance: 0.3
   lootDrops:
   - {fileID: 7670700632336421613, guid: 98ed48ca23ec9184fb124c6306f0e013, type: 3}
+  attackSoundName: EnemyAttack
+  hurtSoundName: EnemyHurt
+  deathSoundName: EnemyDie
