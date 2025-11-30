@@ -13,6 +13,14 @@ public class TutorialUI : MonoBehaviour
     {
         canvasGroup.alpha = 0;
     }
+    
+    void Update()
+    {
+        if (tmpText != null)
+        {
+            tmpText.color = Color.white; 
+        }
+    }
 
     public IEnumerator ShowText(string message, float displayTime = 2f)
     {
