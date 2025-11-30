@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        anim.SetBool("isDead", true); 
+        anim.SetBool("isDead", true);
         rb.velocity = Vector2.zero;
         GetComponent<Collider2D>().enabled = false;
         
