@@ -288,14 +288,14 @@ public class Boss : Enemy
             for (int i = 0; i < minionCount; i++)
             {
                 float currentAngle = startAngle + (i * angleStep);
-                
                 float radian = currentAngle * Mathf.Deg2Rad;
                 Vector2 spawnDir = new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
-                
                 Vector3 spawnPos = transform.position + (Vector3)(spawnDir * summonRadius);
-                
+                if (spawnPos.y < transform.position.y)
+                {
+                    spawnPos.y = transform.position.y + 0.5f;
+                }
                 Instantiate(minionPrefab, spawnPos, Quaternion.identity);
-                
                 if (WaveManager.Instance != null)
                 {
                     WaveManager.Instance.AddEnemy();
